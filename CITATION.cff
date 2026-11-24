@@ -1,0 +1,65 @@
+cff-version: 1.2.0
+title: "KG_Platform — Product–Process–Resource Knowledge Graph platform for disassembly planning"
+message: "If you use this software, please cite both the software itself and the accompanying paper."
+type: software
+authors:
+  - family-names: Bluvstein
+    given-names: German
+    affiliation: "Technical University of Munich, Institute for Machine Tools and Industrial Management (iwb)"
+    email: german.bluvstein@iwb.tum.de
+  - family-names: "van Crüchten"
+    given-names: Richard
+    affiliation: "Technical University of Munich, Institute for Machine Tools and Industrial Management (iwb)"
+  - family-names: Streibel
+    given-names: Lasse
+    affiliation: "Technical University of Munich, Institute for Machine Tools and Industrial Management (iwb)"
+  - family-names: Brunnenkant
+    given-names: Finn-Augustin
+    affiliation: "Technical University of Munich, Institute for Machine Tools and Industrial Management (iwb)"
+  - family-names: Kurscheid
+    given-names: Sebastian
+    affiliation: "Technical University of Munich, Institute for Machine Tools and Industrial Management (iwb)"
+  - family-names: Trattnig
+    given-names: Stephan
+    affiliation: "Technical University of Munich, Institute for Machine Tools and Industrial Management (iwb)"
+  - family-names: Geng
+    given-names: Paul
+    affiliation: "Technical University of Munich, Institute for Machine Tools and Industrial Management (iwb)"
+  - family-names: Daub
+    given-names: Rüdiger
+    affiliation: "Technical University of Munich, Institute for Machine Tools and Industrial Management (iwb); Fraunhofer Institute for Casting, Composite and Processing Technology (IGCV)"
+license: MIT
+version: 1.0.0
+date-released: 2026-11-24
+repository-code: "https://github.com/GermanBlu/Disassembly_KG_Platform"
+keywords:
+  - knowledge graph
+  - disassembly planning
+  - AND/OR graph
+  - GraphRAG
+  - circular economy
+  - neo4j
+  - product-process-resource
+preferred-citation:
+  type: article
+  title: "A knowledge graph schema for disassembly planning with integrated AND/OR disassembly logic"
+  authors:
+    - family-names: Bluvstein
+      given-names: German
+    - family-names: "van Crüchten"
+      given-names: Richard
+    - family-names: Streibel
+      given-names: Lasse
+    - family-names: Brunnenkant
+      given-names: Finn-Augustin
+    - family-names: Kurscheid
+      given-names: Sebastian
+    - family-names: Trattnig
+      given-names: Stephan
+    - family-names: Geng
+      given-names: Paul
+    - family-names: Daub
+      given-names: Rüdiger
+  journal: "Journal of Manufacturing Systems"
+  status: submitted
+  notes: "Under review."

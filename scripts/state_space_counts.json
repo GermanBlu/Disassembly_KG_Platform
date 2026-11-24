@@ -1,0 +1,27 @@
+{
+ "source": "sample_data/Centrifugal Pump/centrifugal_pump_product.json",
+ "note": "exact enumeration of connected induced subgraphs of the contact graph",
+ "rows": [
+  {
+   "config": "ungrouped",
+   "units": 25,
+   "connected_subsets": 4043349
+  },
+  {
+   "config": "only the 4 M12 Flange Bolts grouped",
+   "units": 22,
+   "connected_subsets": 613444
+  },
+  {
+   "config": "only the 6 M20x2.5 Hex Bolts grouped",
+   "units": 20,
+   "connected_subsets": 127362
+  },
+  {
+   "config": "all groups",
+   "units": 17,
+   "connected_subsets": 20161
+  }
+ ],
+ "reduction_factor": 200.6
+}

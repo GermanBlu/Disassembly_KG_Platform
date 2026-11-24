@@ -1,0 +1,149 @@
+{
+ "date": "2026-11-02",
+ "note": "Execution time of the Cypher queries of scripts/pump_eval_run1_results.json, run directly against Neo4j without the language model: one warm-up, then 10 timed executions per query. Per query the median and the maximum in milliseconds; the summary gives the median, the nearest-rank 95th percentile and the maximum of the per-query medians.",
+ "summary": {
+  "queries": 27,
+  "timed": 27,
+  "runs_per_query": 10,
+  "median_of_medians_ms": 0.62,
+  "p95_of_medians_ms": 1.61,
+  "max_median_ms": 2.73
+ },
+ "queries": [
+  {
+   "id": "P01",
+   "median_ms": 0.86,
+   "max_ms": 2.34
+  },
+  {
+   "id": "P02",
+   "median_ms": 0.46,
+   "max_ms": 6.67
+  },
+  {
+   "id": "P03",
+   "median_ms": 0.52,
+   "max_ms": 0.69
+  },
+  {
+   "id": "P04",
+   "median_ms": 0.37,
+   "max_ms": 0.39
+  },
+  {
+   "id": "P05",
+   "median_ms": 0.43,
+   "max_ms": 0.86
+  },
+  {
+   "id": "P06",
+   "median_ms": 0.48,
+   "max_ms": 0.52
+  },
+  {
+   "id": "P07",
+   "median_ms": 0.43,
+   "max_ms": 0.84
+  },
+  {
+   "id": "P08",
+   "median_ms": 0.65,
+   "max_ms": 4.36
+  },
+  {
+   "id": "P09",
+   "median_ms": 0.61,
+   "max_ms": 2.45
+  },
+  {
+   "id": "P10",
+   "median_ms": 0.38,
+   "max_ms": 2.75
+  },
+  {
+   "id": "P11",
+   "median_ms": 0.48,
+   "max_ms": 1.02
+  },
+  {
+   "id": "P12",
+   "median_ms": 0.62,
+   "max_ms": 2.17
+  },
+  {
+   "id": "P13",
+   "median_ms": 0.73,
+   "max_ms": 0.78
+  },
+  {
+   "id": "P14",
+   "median_ms": 0.57,
+   "max_ms": 1.68
+  },
+  {
+   "id": "P15",
+   "median_ms": 0.74,
+   "max_ms": 5.12
+  },
+  {
+   "id": "P15b",
+   "median_ms": 0.87,
+   "max_ms": 7.79
+  },
+  {
+   "id": "P16",
+   "median_ms": 1.61,
+   "max_ms": 2.8
+  },
+  {
+   "id": "P17",
+   "median_ms": 2.73,
+   "max_ms": 6.59
+  },
+  {
+   "id": "P18",
+   "median_ms": 0.63,
+   "max_ms": 1.67
+  },
+  {
+   "id": "P19",
+   "median_ms": 1.23,
+   "max_ms": 1.45
+  },
+  {
+   "id": "P20",
+   "median_ms": 0.46,
+   "max_ms": 0.52
+  },
+  {
+   "id": "P21",
+   "median_ms": 1.17,
+   "max_ms": 1.54
+  },
+  {
+   "id": "P22",
+   "median_ms": 0.55,
+   "max_ms": 1.79
+  },
+  {
+   "id": "P23",
+   "median_ms": 1.01,
+   "max_ms": 2.5
+  },
+  {
+   "id": "P24",
+   "median_ms": 0.51,
+   "max_ms": 1.34
+  },
+  {
+   "id": "P25",
+   "median_ms": 1.56,
+   "max_ms": 1.64
+  },
+  {
+   "id": "P26",
+   "median_ms": 0.73,
+   "max_ms": 1.03
+  }
+ ]
+}

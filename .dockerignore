@@ -1,0 +1,13 @@
+# Keep the demo image slim. The seed needs only the small JSON samples, not the
+# STEP files (the demo doesn't run the CAD pipeline).
+.git
+.venv
+lib
+.ruff_cache
+**/__pycache__
+*.pyc
+.env
+tests
+# CAD samples; the seed uses sample_data/hypothetical_product.json
+sample_data/Centrifugal Pump
+sample_data/Hypothetical Product STEP

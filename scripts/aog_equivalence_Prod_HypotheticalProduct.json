@@ -1,0 +1,31 @@
+{
+  "product": {
+    "id": "Prod_HypotheticalProduct",
+    "name": "Hypothetical Product"
+  },
+  "generator": {
+    "states": 41,
+    "hyper_arcs": 114,
+    "transitions": 114
+  },
+  "knowledge_graph": {
+    "states": 41,
+    "hyper_arcs": 114
+  },
+  "or_states": 35,
+  "max_branching": 5,
+  "multi_result_arcs": 24,
+  "terminal_states": 0,
+  "root": [
+    "ABCDEFGH"
+  ],
+  "checks": {
+    "states_identical": true,
+    "arcs_identical": true,
+    "branching_identical": true,
+    "root_identical": true,
+    "terminals_identical": true,
+    "multi_result_arcs_identical": true
+  },
+  "equivalent": true
+}

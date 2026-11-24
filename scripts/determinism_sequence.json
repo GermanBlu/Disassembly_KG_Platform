@@ -1,0 +1,213 @@
+{
+ "question": "Generate a complete disassembly sequence for this product.",
+ "n": 10,
+ "first_named_transition_distribution": {
+  "T340": 3,
+  "T303": 1,
+  "T338": 2,
+  "T195": 1,
+  "T326": 2,
+  "null": 1
+ },
+ "distinct_transition_sets": 7,
+ "runs_without_transition_ids": 1,
+ "identical_across_runs": false,
+ "runs": [
+  {
+   "run": 1,
+   "transition_ids": [
+    "T340",
+    "T327",
+    "T239",
+    "T205",
+    "T188",
+    "T161",
+    "T56",
+    "T01",
+    "T11",
+    "T04",
+    "T48",
+    "T18",
+    "T08"
+   ],
+   "first": "T340",
+   "error": null,
+   "answer_head": "## Disassembly sequence\n\nThe graph shows the following complete path. After the bearing-end transition, it splits into two subassemblies; both branches are included below. Assembly IDs are retained where the graph does not provide human-readable names for them. All listed agents are **Human Worker** agents.\n\n1. **Transition T340 \u2014 `Asm_ABCDEFGHIJKLMNOPQRSTUVWXY`**\n   - Task: Pull Off Coupling\n   - Skill: Pulling Off\n   - Tool: Pull-Off Tool\n   - Results: `ABCDEFGIJKLMNOPQRSTUVWXY` and Coupling\n\n2. **Transition T327 \u2014 `Asm_ABCDEFGIJKLMNOPQRSTUVWXY`**\n   - The transition has five task records in"
+  },
+  {
+   "run": 2,
+   "transition_ids": [
+    "T303",
+    "T224",
+    "T58",
+    "T337",
+    "T334",
+    "T188",
+    "T161",
+    "T09",
+    "T28",
+    "T01",
+    "T47",
+    "T21",
+    "T08"
+   ],
+   "first": "T303",
+   "error": null,
+   "answer_head": "## Complete disassembly sequence\n\nThe graph shows two branches after transition **T303**. Both branches are included below. The multiple tasks listed for **T303**, **T224**, and **T58** are associated with the same transition and produce the same results; the data does not specify an order among those tasks.\n\n1. **T337 \u2014 starting assembly `Asm_ABCDEFGHIJKLMNOPQRSTUVWXY`**\n   - Task: **Unscrew 4x M12 Flange Bolt**\n   - Skill: Unscrewing\n   - Agent: **Human** \u2014 Human Worker\n   - Tool: Combination Wrench (18mm)\n   - Results: M12 Flange Bolts 1\u20134, Suction Nozzle, and assembly `ABCDEFGHIJKMNQSTUWXY"
+  },
+  {
+   "run": 3,
+   "transition_ids": [
+    "T338",
+    "T296",
+    "T232",
+    "T21",
+    "T08",
+    "T183",
+    "T181",
+    "T84",
+    "T51",
+    "T29",
+    "T01",
+    "T05",
+    "T10"
+   ],
+   "first": "T338",
+   "error": null,
+   "answer_head": "## Complete disassembly sequence\n\nThe graph shows two branches after the first transition. Both are needed to cover the listed disassembly paths. Assembly identifiers are retained as given in the data because the returned results do not map their letters to part names.\n\n**Agent information:** Every task is assigned to **Human Worker**. The agent type is not populated in the returned data.\n\n### 1. Initial split\n\n1. **Transition T338 \u2014 `Asm_ABCDEFGHIJKLMNOPQRSTUVWXY`**\n   - Task: Unscrew 6x M20x2.5 Hex Bolt\n   - Connection: Unscrewing\n   - Skill: Unscrewing\n   - Agent: Human Worker (type not pop"
+  },
+  {
+   "run": 4,
+   "transition_ids": [
+    "T338",
+    "T296",
+    "T232",
+    "T183",
+    "T181",
+    "T84",
+    "T51",
+    "T29",
+    "T01",
+    "T05",
+    "T21",
+    "T08",
+    "T10"
+   ],
+   "first": "T338",
+   "error": null,
+   "answer_head": "## Disassembly sequence\n\nThe graph shows a branching sequence: after the first transition, the resulting assemblies are disassembled independently. The agent is listed as **Human Worker** for every task; the agent type is not populated in the supplied data.\n\n1. **Transition T338 \u2014 Asm_ABCDEFGHIJKLMNOPQRSTUVWXY**\n   - Task: Unscrew 6x M20x2.5 Hex Bolt\n   - Skill: Unscrewing\n   - Agent: Human Worker (type not provided)\n   - Tool: Combination Wrench (30mm)\n   - Results include **BCDFGHIKMNTW**, **ALOPRV**, six M20x2.5 Hex Bolts, and the Volute Casing Gasket.\n\n### Branch from Asm_BCDFGHIKMNTW\n\n2. "
+  },
+  {
+   "run": 5,
+   "transition_ids": [
+    "T195",
+    "T339",
+    "T324",
+    "T322",
+    "T293",
+    "T153",
+    "T119",
+    "T53",
+    "T27",
+    "T03",
+    "T06",
+    "T13",
+    "T09"
+   ],
+   "first": "T195",
+   "error": null,
+   "answer_head": "## Disassembly sequence\n\nThe graph provides one complete path, with two branches that must be followed independently after Transition **T195**. Each transition below may list several tasks for that same transition; all are included as reported.\n\n1. **T339 \u2014 M20 Cap Nut**\n   - From `Asm_ABCDEFGHIJKLMNOPQRSTUVWXY`\n   - Tasks: **Pick M20 Cap Nut** (Picking), then **Unscrew M20 Cap Nut** (Unscrewing)\n   - Agent: **Human Worker (Human)**\n   - Tools: **No Tool (Manual)**; **Combination Wrench (30mm)**\n   - Results include **M20 Cap Nut** and `ABCDEFGHIJKLMOPQRSTUVWXY`.\n\n2. **T324 \u2014 4\u00d7 M12 Flange Bol"
+  },
+  {
+   "run": 6,
+   "transition_ids": [
+    "T340",
+    "T332",
+    "T306",
+    "T302",
+    "T230",
+    "T219",
+    "T162",
+    "T161",
+    "T57",
+    "T29",
+    "T01",
+    "T05",
+    "T06"
+   ],
+   "first": "T340",
+   "error": null,
+   "answer_head": "## Complete disassembly sequence found\n\nThe transitions form a branching sequence: after some steps, multiple assemblies or individual parts remain and are disassembled separately. All recorded tasks list the agent as **Human Worker (Human)**.\n\n1. **T340 \u2014 Asm_ABCDEFGHIJKLMNOPQRSTUVWXY**\n   - Task: Pull Off Coupling\n   - Connection: Pulling Off\n   - Tool: Pull-Off Tool\n   - Results: assembly `ABCDEFGIJKLMNOPQRSTUVWXY` and Coupling\n\n2. **T332 \u2014 Asm_ABCDEFGIJKLMNOPQRSTUVWXY**\n   - Task: Unscrew 4x M12 Flange Bolt\n   - Connection: Unscrewing\n   - Tool: Combination Wrench (18mm)\n   - Results: asse"
+  },
+  {
+   "run": 7,
+   "transition_ids": [
+    "T340",
+    "T332",
+    "T307",
+    "T235",
+    "T230",
+    "T219",
+    "T06",
+    "T162",
+    "T161",
+    "T57",
+    "T29",
+    "T01",
+    "T05"
+   ],
+   "first": "T340",
+   "error": null,
+   "answer_head": "## Complete disassembly sequence\n\nThe graph provides a complete path, including two branches that must be continued independently. Where the same transition has multiple task rows, I\u2019ve listed the task alternatives returned by the graph.\n\n1. **Transition T340 \u2014 Pull Off Coupling**\n   - **From:** `Asm_ABCDEFGHIJKLMNOPQRSTUVWXY`\n   - **Task:** Pull Off Coupling; **skill:** Pulling Off\n   - **Agent:** Human Worker (**Human**); **tool:** Pull-Off Tool\n   - **Results:** `ABCDEFGIJKLMNOPQRSTUVWXY` and Coupling\n\n2. **Transition T332 \u2014 Unscrew 4x M12 Flange Bolt**\n   - **From:** `Asm_ABCDEFGIJKLMNOPQR"
+  },
+  {
+   "run": 8,
+   "transition_ids": [
+    "T326",
+    "T339",
+    "T10",
+    "T293",
+    "T199",
+    "T216",
+    "T209",
+    "T153",
+    "T119",
+    "T53",
+    "T27",
+    "T03",
+    "T06"
+   ],
+   "first": "T326",
+   "error": null,
+   "answer_head": "## Complete disassembly sequence\n\nThe data shows two branches after transition **T326**. The **ALOPRV** branch and the **BCDFGHIKMTW** branch can be followed separately. The agent type is not provided in the data; the listed agent is **Human Worker**.\n\n### 1. Remove the M20 Cap Nut\n\n- **Transition T339 \u2014 from Asm_ABCDEFGHIJKLMNOPQRSTUVWXY**\n  - Pick the **M20 Cap Nut** \u2014 skill: Picking; agent: Human Worker (type not provided); tool: No Tool (Manual).\n  - Unscrew the **M20 Cap Nut** \u2014 skill: Unscrewing; agent: Human Worker (type not provided); tool: Combination Wrench (30mm).\n  - Results: **M20"
+  },
+  {
+   "run": 9,
+   "transition_ids": [],
+   "first": null,
+   "error": null,
+   "answer_head": "## Disassembly sequence\n\nThe graph shows a main disassembly chain with several branches. The steps below follow the available assembly states; where a transition has multiple task records, those are shown as alternatives recorded in the graph.\n\n1. **Asm_ABCDEFGHIJKLMNOPQRSTUVWXY \u2192 Asm_ABCDEFGHIJKMNQSTUWXY**, also releasing the four M12 flange bolts and the Suction Nozzle.  \n   **Task:** Unscrew 4x M12 Flange Bolt \u00b7 **Skill:** Unscrewing \u00b7 **Agent:** Human \u2014 Human Worker \u00b7 **Tool:** Combination Wrench (18mm)\n\n2. **Asm_ABCDEFGHIJKMNQSTUWXY \u2192 Asm_ABCDEFGIJKMNQSTUWXY**, also releasing the Coupling"
+  },
+  {
+   "run": 10,
+   "transition_ids": [
+    "T326",
+    "T10",
+    "T119",
+    "T339",
+    "T293",
+    "T199",
+    "T216",
+    "T209",
+    "T153",
+    "T53",
+    "T27",
+    "T03",
+    "T06"
+   ],
+   "first": "T326",
+   "error": null,
+   "answer_head": "The data does **not** provide a complete disassembly sequence for the entire product: transition **T326** splits off the assembly `ALOPRV`, and although **T10** is listed for that assembly, no continuation from its results is present. The following is the continuation-supported sequence through the other branch; it ends with the two `T119` output assemblies disassembled as far as the data allows.\n\n1. **T339 \u2014 `Asm_ABCDEFGHIJKLMNOPQRSTUVWXY`**\n   - Tasks listed: **Pick M20 Cap Nut** (Picking) and **Unscrew M20 Cap Nut** (Unscrewing).\n   - Agent: Human Worker. Tools: No Tool (Manual); Combinatio"
+  }
+ ]
+}

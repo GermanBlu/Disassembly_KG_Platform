@@ -1,0 +1,452 @@
+id,category,question,cypher,rows,llm_answer,pass,failures
+H01,Product structure,What components are in this product?,"MATCH (p:Product {id: 'Prod_HypotheticalProductTimingRun'})-[:CONSISTS_OF]->(root:Assembly {product_id: 'Prod_HypotheticalProductTimingRun'})-[:CONSISTS_OF]->(c:Component {product_id: 'Prod_HypotheticalProductTimingRun'})
+RETURN c.partId AS partId, c.name AS component, c.material AS material,
+       c.mass_g AS mass_g, c.recyclable AS recyclable, c.eol_route AS endOfLifeRoute
+ORDER BY c.partId",8,"The product contains these components:
+
+- A — Holder
+- B — End plate
+- C — Hex socket head cap screw M8x1.25 x 14_1
+- D — Base plate
+- E — Tube_1
+- F — Hex socket head cap screw M8x1.25 x 14_2
+- G — Tube_2
+- H — Shaft
+
+Material, mass, recyclability, and end-of-life route are not populated in the graph for these components.",PASS,
+H02,Product structure,List all components and fasteners,"MATCH (c:Component {product_id: 'Prod_HypotheticalProductTimingRun'})
+RETURN CASE WHEN c:Fastener THEN 'Fastener' ELSE 'Component' END AS itemType,
+       c.partId AS partId,
+       c.name AS name,
+       c.material AS material,
+       c.mass_g AS mass,
+       c.recyclable AS recyclable,
+       c.eol_route AS endOfLifeRoute
+ORDER BY itemType, partId",8,"### Components
+- **A — Holder**
+- **B — End plate**
+- **D — Base plate**
+- **E — Tube_1**
+- **G — Tube_2**
+- **H — Shaft**
+
+### Fasteners
+- **C — Hex socket head cap screw M8x1.25 x 14_1**
+- **F — Hex socket head cap screw M8x1.25 x 14_2**
+
+Material, mass, recyclability, and end-of-life route are not populated for these items in the graph.",PASS,
+H03,Product structure,How many components does the product have?,"MATCH (p:Product {id: 'Prod_HypotheticalProductTimingRun'})-[:CONSISTS_OF]->(root:Assembly {product_id: 'Prod_HypotheticalProductTimingRun'})-[:CONSISTS_OF]->(c:Component {product_id: 'Prod_HypotheticalProductTimingRun'})
+RETURN count(DISTINCT c) AS componentCount",1,The product has **8 components**.,PASS,
+H04,Product structure,Which components are fasteners?,"MATCH (f:Fastener {product_id: 'Prod_HypotheticalProductTimingRun'})
+RETURN f.partId AS partId, f.name AS fastener
+ORDER BY f.partId",2,"The fasteners are:
+
+- Part C: Hex socket head cap screw M8x1.25 x 14_1
+- Part F: Hex socket head cap screw M8x1.25 x 14_2",PASS,
+H05,Product structure,What is the root assembly?,"MATCH (p:Product {id: 'Prod_HypotheticalProductTimingRun'})-[:CONSISTS_OF]->(root:Assembly {product_id: 'Prod_HypotheticalProductTimingRun', isRoot: true})
+RETURN root.id AS rootAssemblyId, root.name AS rootAssembly",1,The root assembly is **ABCDEFGH** (ID: `Asm_ABCDEFGH`).,PASS,
+H06,Connections,What connection types are used?,"MATCH (conn:Connection {product_id: 'Prod_HypotheticalProductTimingRun'})-[:OF_TYPE]->(ct:ConnectionType)
+MATCH (conn)-[:CONNECTS]->(c:Component)
+RETURN conn.name AS connection, ct.name AS connectionType,
+       ct.destructiveness AS destructiveness,
+       collect(c.name) AS connectedParts
+ORDER BY conn.name",5,"The connection types used are:
+
+- **Press Fit** — Base plate ↔ Tube_1, Base plate ↔ Tube_2, and End plate ↔ Shaft
+- **Screw Joint** — Holder ↔ Base plate
+- **Loose Fit** — Holder ↔ Shaft
+
+All are listed as **Non-destructive**.",PASS,
+H07,Connections,How many connections does this product have?,"MATCH (conn:Connection {product_id: 'Prod_HypotheticalProductTimingRun'})
+RETURN count(DISTINCT conn) AS connectionCount",1,The product has **6 connections**.,PASS,
+H08,Connections,Which connections are screw joints?,"MATCH (conn:Connection {product_id: 'Prod_HypotheticalProductTimingRun'})-[:OF_TYPE]->(ct:ConnectionType {id: 'CT_ScrewJoint'})
+OPTIONAL MATCH (conn)-[:CONNECTS]->(component:Component {product_id: 'Prod_HypotheticalProductTimingRun'})
+RETURN conn.id AS connectionId, conn.name AS connection,
+       collect(DISTINCT component.name) AS connectedParts
+ORDER BY connectionId",2,"The screw joints are:
+
+- **Conn_AD_C** — Holder ↔ Base plate
+- **Conn_AD_F** — Holder ↔ Base plate",PASS,
+H09,Connections,Which fastener mediates the connection between Holder and Base plate?,"MATCH (f:Fastener {product_id: 'Prod_HypotheticalProductTimingRun'})<-[:USES_FASTENER]-(:Connection {product_id: 'Prod_HypotheticalProductTimingRun'})-[:CONNECTS]->(p:Component {product_id: 'Prod_HypotheticalProductTimingRun'})
+WITH f, collect(DISTINCT toLower(p.name)) AS names
+WHERE all(t IN ['holder', 'base plate'] WHERE t IN names)
+RETURN f.partId AS partId, f.name AS fastener, names",2,"Two fasteners mediate the connection between the Holder and Base plate:
+
+- Hex socket head cap screw M8x1.25 x 14_1 (part C)
+- Hex socket head cap screw M8x1.25 x 14_2 (part F)",PASS,
+H10,Fasteners,How many screws does this product have?,"MATCH (f:Fastener {product_id: 'Prod_HypotheticalProductTimingRun'})
+WHERE toLower(f.name) CONTAINS 'screw'
+RETURN count(DISTINCT f) AS screwCount",1,The product has 2 screws.,PASS,
+H11,Disassembly sequences,Generate a complete disassembly sequence,"MATCH p = (root:Assembly {product_id: 'Prod_HypotheticalProductTimingRun', isRoot: true})
+      (()<-[:TRANSFORMS]-(t:Transition WHERE NOT EXISTS {
+          MATCH (t2:Transition {product_id: 'Prod_HypotheticalProductTimingRun'})-[:TRANSFORMS]->(a:Assembly {product_id: 'Prod_HypotheticalProductTimingRun'})<-[:TRANSFORMS]-(t)
+          WHERE ((toInteger(substring(t2.id, 1)) + 938417263) * 2654435761) % 2147483648
+              < ((toInteger(substring(t.id, 1))  + 938417263) * 2654435761) % 2147483648
+      })-[:RESULTS_IN]->()){1,24}
+      (x)
+UNWIND [n IN nodes(p) WHERE n:Transition] AS trans
+WITH DISTINCT trans
+MATCH (trans)-[:TRANSFORMS]->(inputAsm:Assembly {product_id: 'Prod_HypotheticalProductTimingRun'})
+MATCH (trans)-[:RESULTS_IN]->(output)
+OPTIONAL MATCH (trans)-[:DISASSEMBLED_BY]->(task:DisassemblyTask {product_id: 'Prod_HypotheticalProductTimingRun'})
+OPTIONAL MATCH (task)-[:REQUIRES]->(skill:Skill)
+OPTIONAL MATCH (task)-[:PERFORMED_BY]->(agent:Agent)
+OPTIONAL MATCH (task)-[:USES_TOOL]->(tool:Tool)
+RETURN trans.id AS transition, inputAsm.id AS fromAssembly,
+       task.name AS task, skill.name AS skill, agent.name AS agent,
+       tool.name AS tool,
+       collect(DISTINCT coalesce(output.name, output.id)) AS results
+ORDER BY size(inputAsm.id) DESC, transition",6,"## Disassembly sequence
+
+1. **Starting assembly: `Asm_ABCDEFGH`**
+   - **Task:** Unscrew Hex socket head cap screw M8x1.25 x 14_1
+   - **Connection result:** `ABDEFGH` and Hex socket head cap screw M8x1.25 x 14_1
+   - **Skill:** Unscrewing
+   - **Agent:** Human — Human Worker
+   - **Tool:** Allen Key (5mm)
+
+2. **From assembly `Asm_ABDEFGH`**
+   - **Task:** Pull Off Tube_2
+   - **Connection result:** `ABDEFH` and Tube_2
+   - **Skill:** Pulling Off
+   - **Agent:** Human — Human Worker
+   - **Tool:** Pull-Off Tool
+
+3. **From assembly `Asm_ABDEFH`**
+   - **Task:** Pull Off End plate
+   - **Connection result:** `ADEFH` and End plate
+   - **Skill:** Pulling Off
+   - **Agent:** Human — Human Worker
+   - **Tool:** Pull-Off Tool
+
+4. **From assembly `Asm_ADEFH`**
+   - **Task:** Pick Shaft
+   - **Connection result:** Shaft and `ADEF`
+   - **Skill:** Picking
+   - **Agent:** Human — Human Worker
+   - **Tool:** No Tool (Manual)
+
+5. **From assembly `Asm_ADEF`**
+   - **Task:** Pull Off Tube_1
+   - **Connection result:** Tube_1 and `ADF`
+   - **Skill:** Pulling Off
+   - **Agent:** Human — Human Worker
+   - **Tool:** Pull-Off Tool
+
+6. **From assembly `Asm_ADF`**
+   - **Task:** Unscrew Hex socket head cap screw M8x1.25 x 14_2
+   - **Connection result:** Base plate, Holder, and Hex socket head cap screw M8x1.25 x 14_2
+   - **Skill:** Unscrewing
+   - **Agent:** Human — Human Worker
+   - **Tool:** Allen Key (5mm)",PASS,
+H12,Disassembly sequences,What is the first step to disassemble this product?,"MATCH (trans:Transition {product_id: 'Prod_HypotheticalProductTimingRun'})-[:TRANSFORMS]->(root:Assembly {product_id: 'Prod_HypotheticalProductTimingRun', isRoot: true})
+MATCH (trans)-[:RESULTS_IN]->(output)
+OPTIONAL MATCH (trans)-[:DISASSEMBLED_BY]->(task:DisassemblyTask {product_id: 'Prod_HypotheticalProductTimingRun'})
+OPTIONAL MATCH (task)-[:PERFORMED_BY]->(agent:Agent)
+OPTIONAL MATCH (task)-[:USES_TOOL]->(tool:Tool)
+RETURN trans.id AS transition, root.id AS fromAssembly, task.name AS task,
+       agent.name AS agent, tool.name AS tool,
+       collect(DISTINCT coalesce(output.name, output.id)) AS results
+ORDER BY transition",5,"The data shows **five possible first steps** from the complete assembly; it does not identify one as the unique first step:
+
+- Unscrew **Hex socket head cap screw M8x1.25 x 14_2** with an **Allen Key (5mm)**.
+- Pull off **Tube_1** with a **Pull-Off Tool**.
+- Unscrew **Hex socket head cap screw M8x1.25 x 14_1** with an **Allen Key (5mm)**.
+- Pull off the **End plate** with a **Pull-Off Tool**.
+- Pull off **Tube_2** with a **Pull-Off Tool**.
+
+Each task lists **Human Worker** as the agent. The agent type is not specified in the data.",PASS,
+H13,Disassembly sequences,How many disassembly states does this product have?,"MATCH (asm:Assembly {product_id: 'Prod_HypotheticalProductTimingRun'})
+RETURN count(DISTINCT asm) AS disassemblyStateCount",1,This product has **41 distinct disassembly states**.,PASS,
+H14,Disassembly sequences,How many transitions does the product have?,"MATCH (trans:Transition {product_id: 'Prod_HypotheticalProductTimingRun'})
+RETURN count(DISTINCT trans) AS transitionCount",1,The product has **114 transitions**.,PASS,
+H15,Disassembly sequences,Which assembly states have alternative disassembly paths?,"MATCH (trans:Transition {product_id: 'Prod_HypotheticalProductTimingRun'})-[:TRANSFORMS]->(asm:Assembly {product_id: 'Prod_HypotheticalProductTimingRun', isState: true})
+WITH asm, collect(DISTINCT trans.id) AS transitionIds
+WHERE size(transitionIds) > 1
+RETURN asm.id AS assemblyState,
+       asm.name AS assemblyName,
+       size(transitionIds) AS alternativePathCount,
+       transitionIds AS alternativeTransitions
+ORDER BY assemblyState",35,"The following assembly states have alternative disassembly paths:
+
+| Assembly state | Alternative paths | Transitions |
+|---|---:|---|
+| ABCDEFGH | 5 | T110, T113, T112, T111, T114 |
+| ABCDEFH | 4 | T106, T107, T109, T108 |
+| ABCDEGH | 4 | T96, T95, T97, T98 |
+| ABCDEH | 3 | T84, T83, T85 |
+| ABCDFGH | 4 | T102, T105, T103, T104 |
+| ABCDFH | 3 | T99, T101, T100 |
+| ABCDGH | 3 | T82, T81, T80 |
+| ABCDH | 2 | T65, T64 |
+| ABDEFGH | 4 | T88, T89, T86, T87 |
+| ABDEFH | 3 | T71, T69, T70 |
+| ABDFGH | 3 | T67, T66, T68 |
+| ABDFH | 2 | T60, T59 |
+| ACDE | 2 | T15, T16 |
+| ACDEF | 3 | T33, T32, T34 |
+| ACDEFG | 4 | T51, T54, T53, T52 |
+| ACDEFGH | 5 | T91, T94, T93, T92, T90 |
+| ACDEFH | 4 | T78, T76, T77, T79 |
+| ACDEG | 3 | T44, T45, T46 |
+| ACDEGH | 4 | T57, T56, T55, T58 |
+| ACDEH | 3 | T38, T40, T39 |
+| ACDF | 2 | T19, T20 |
+| ACDFG | 3 | T31, T30, T29 |
+| ACDFGH | 4 | T73, T72, T75, T74 |
+| ACDFH | 3 | T62, T63, T61 |
+| ACDG | 2 | T13, T14 |
+| ACDGH | 3 | T37, T36, T35 |
+| ACDH | 2 | T22, T21 |
+| ADEF | 2 | T11, T12 |
+| ADEFG | 3 | T43, T42, T41 |
+| ADEFGH | 4 | T50, T48, T49, T47 |
+| ADEFH | 3 | T27, T28, T26 |
+| ADFG | 2 | T10, T09 |
+| ADFGH | 3 | T25, T23, T24 |
+| ADFH | 2 | T17, T18 |
+| DEG | 2 | T07, T08 |",PASS,
+H16,Tasks,What tasks are needed to disassemble this product?,"MATCH (task:DisassemblyTask {product_id: 'Prod_HypotheticalProductTimingRun'})
+OPTIONAL MATCH (task)-[:ACTS_ON]->(conn:Connection {product_id: 'Prod_HypotheticalProductTimingRun'})
+OPTIONAL MATCH (task)-[:REQUIRES]->(skill:Skill)
+OPTIONAL MATCH (task)-[:PERFORMED_BY]->(agent:Agent)
+OPTIONAL MATCH (task)-[:USES_TOOL]->(tool:Tool)
+RETURN task.id AS taskId,
+       task.name AS task,
+       collect(DISTINCT conn.name) AS connections,
+       collect(DISTINCT agent.name) AS agents,
+       collect(DISTINCT tool.name) AS tools,
+       collect(DISTINCT skill.name) AS skills
+ORDER BY taskId",6,"The Knowledge Graph lists these disassembly tasks:
+
+1. **Unscrew Hex socket head cap screw M8x1.25 x 14_1** from the **Holder ↔ Base plate** connection. Skill: Unscrewing. Agent: Human Worker. Tool: Allen Key (5mm).
+2. **Unscrew Hex socket head cap screw M8x1.25 x 14_2** from the **Holder ↔ Base plate** connection. Skill: Unscrewing. Agent: Human Worker. Tool: Allen Key (5mm).
+3. **Pick Shaft** from the **Holder ↔ Shaft** connection. Skill: Picking. Agent: Human Worker. Tool: No Tool (Manual).
+4. **Pull Off End plate** from the **End plate ↔ Shaft** connection. Skill: Pulling Off. Agent: Human Worker. Tool: Pull-Off Tool.
+5. **Pull Off Tube_1** from the **Base plate ↔ Tube_1** connection. Skill: Pulling Off. Agent: Human Worker. Tool: Pull-Off Tool.
+6. **Pull Off Tube_2** from the **Base plate ↔ Tube_2** connection. Skill: Pulling Off. Agent: Human Worker. Tool: Pull-Off Tool.
+
+The data lists the tasks but does not specify their execution order.",PASS,
+H17,Tasks,Show all disassembly tasks,"MATCH (task:DisassemblyTask {product_id: 'Prod_HypotheticalProductTimingRun'})
+OPTIONAL MATCH (task)-[:ACTS_ON]->(conn:Connection {product_id: 'Prod_HypotheticalProductTimingRun'})
+OPTIONAL MATCH (task)-[:PERFORMED_BY]->(agent:Agent)
+OPTIONAL MATCH (task)-[:USES_TOOL]->(tool:Tool)
+OPTIONAL MATCH (task)-[:REQUIRES]->(skill:Skill)
+RETURN task.id AS taskId,
+       task.name AS task,
+       collect(DISTINCT conn.id) AS connections,
+       collect(DISTINCT agent.name) AS agents,
+       collect(DISTINCT tool.name) AS tools,
+       collect(DISTINCT skill.name) AS skills
+ORDER BY taskId",6,"The disassembly tasks found are:
+
+| Task ID | Task | Connection | Agent | Tool | Skill |
+|---|---|---|---|---|---|
+| `Task_Dis_AD_C` | Unscrew Hex socket head cap screw M8x1.25 x 14_1 | `Conn_AD_C` | Human Worker (Human) | Allen Key (5mm) | Unscrewing |
+| `Task_Dis_AD_F` | Unscrew Hex socket head cap screw M8x1.25 x 14_2 | `Conn_AD_F` | Human Worker (Human) | Allen Key (5mm) | Unscrewing |
+| `Task_Dis_AH` | Pick Shaft | `Conn_AH` | Human Worker (Human) | No Tool (Manual) | Picking |
+| `Task_Dis_BH` | Pull Off End plate | `Conn_BH` | Human Worker (Human) | Pull-Off Tool | Pulling Off |
+| `Task_Dis_DE` | Pull Off Tube_1 | `Conn_DE` | Human Worker (Human) | Pull-Off Tool | Pulling Off |
+| `Task_Dis_DG` | Pull Off Tube_2 | `Conn_DG` | Human Worker (Human) | Pull-Off Tool | Pulling Off |",PASS,
+H18,Resources,Which tools are required for the entire disassembly?,"MATCH (task:DisassemblyTask {product_id: 'Prod_HypotheticalProductTimingRun'})
+OPTIONAL MATCH (task)-[:USES_TOOL]->(tool:Tool)
+WITH collect(DISTINCT tool.name) AS tools
+RETURN tools AS toolsRequiredForEntireDisassembly",1,"The tools listed for the entire disassembly are:
+
+- Allen Key (5mm)
+- No Tool (Manual)
+- Pull-Off Tool",FAIL,rows 1 < min 2
+H19,Resources,Which tasks does the human worker perform?,"MATCH (task:DisassemblyTask {product_id: 'Prod_HypotheticalProductTimingRun'})-[:PERFORMED_BY]->(agent:Agent {agentType: 'Human'})
+OPTIONAL MATCH (task)-[:ACTS_ON]->(conn:Connection {product_id: 'Prod_HypotheticalProductTimingRun'})
+OPTIONAL MATCH (task)-[:USES_TOOL]->(tool:Tool)
+OPTIONAL MATCH (task)-[:REQUIRES]->(skill:Skill)
+RETURN task.id AS taskId, task.name AS task,
+       collect(DISTINCT conn.name) AS connections,
+       agent.name AS agent,
+       collect(DISTINCT tool.name) AS tools,
+       collect(DISTINCT skill.name) AS skills
+ORDER BY task.name",6,"The **Human Worker (Human)** performs these tasks:
+
+- **Pick Shaft** — acts on the **Holder ↔ Shaft** connection; skill: **Picking**; tool: **No Tool (Manual)**.
+- **Pull Off End plate** — acts on **End plate ↔ Shaft**; skill: **Pulling Off**; tool: **Pull-Off Tool**.
+- **Pull Off Tube_1** — acts on **Base plate ↔ Tube_1**; skill: **Pulling Off**; tool: **Pull-Off Tool**.
+- **Pull Off Tube_2** — acts on **Base plate ↔ Tube_2**; skill: **Pulling Off**; tool: **Pull-Off Tool**.
+- **Unscrew Hex socket head cap screw M8x1.25 x 14_1** — acts on **Holder ↔ Base plate**; skill: **Unscrewing**; tool: **Allen Key (5mm)**.
+- **Unscrew Hex socket head cap screw M8x1.25 x 14_2** — acts on **Holder ↔ Base plate**; skill: **Unscrewing**; tool: **Allen Key (5mm)**.",PASS,
+H20,Resources,Which skills can handle screw joints?,"MATCH (skill:Skill)-[:SUITABLE_FOR]->(ct:ConnectionType {id: 'CT_ScrewJoint'})
+RETURN skill.name AS skill, ct.name AS connectionType
+ORDER BY skill.name",1,The **Unscrewing** skill can handle **Screw Joint** connections.,PASS,
+H21,Cross-domain,"If the Allen Key tool becomes unavailable, which tasks are affected?","MATCH (task:DisassemblyTask {product_id: 'Prod_HypotheticalProductTimingRun'})-[:USES_TOOL]->(tool:Tool)
+WHERE toLower(tool.name) CONTAINS 'allen key'
+RETURN task.id AS taskId, task.name AS task, tool.name AS tool
+ORDER BY task.name",2,"If the **Allen Key (5mm)** becomes unavailable, these tasks are affected:
+
+- **Unscrew Hex socket head cap screw M8x1.25 x 14_1**
+- **Unscrew Hex socket head cap screw M8x1.25 x 14_2**",PASS,
+H22,Cross-domain,Which tools are needed to unscrew the screws?,"MATCH (f:Fastener {product_id: 'Prod_HypotheticalProductTimingRun'})
+MATCH (conn:Connection {product_id: 'Prod_HypotheticalProductTimingRun'})-[:USES_FASTENER]->(f)
+MATCH (task:DisassemblyTask {product_id: 'Prod_HypotheticalProductTimingRun'})-[:ACTS_ON]->(conn)
+OPTIONAL MATCH (task)-[:USES_TOOL]->(tool:Tool)
+OPTIONAL MATCH (task)-[:PERFORMED_BY]->(agent:Agent)
+RETURN f.partId AS fastenerPartId, f.name AS fastener,
+       task.name AS task, tool.name AS tool,
+       agent.name AS agent, agent.agentType AS agentType
+ORDER BY f.partId",2,"An **Allen Key (5mm)** is listed for unscrewing both screws:
+
+- Hex socket head cap screw M8x1.25 x 14_1
+- Hex socket head cap screw M8x1.25 x 14_2",PASS,
+H23,Cross-domain,"For each tool used in this product, list the connection types it is used on","MATCH (task:DisassemblyTask {product_id: 'Prod_HypotheticalProductTimingRun'})-[:USES_TOOL]->(tool:Tool)
+MATCH (task)-[:ACTS_ON]->(conn:Connection {product_id: 'Prod_HypotheticalProductTimingRun'})-[:OF_TYPE]->(ct:ConnectionType)
+RETURN tool.name AS tool,
+       collect(DISTINCT ct.name) AS connectionTypes
+ORDER BY tool",3,"- **Allen Key (5mm):** Screw Joint
+- **No Tool (Manual):** Loose Fit
+- **Pull-Off Tool:** Press Fit",PASS,
+H24,AOG logic,Which transitions disassemble an assembly into multiple components simultaneously?,"MATCH (trans:Transition {product_id: 'Prod_HypotheticalProductTimingRun'})-[:TRANSFORMS]->(inAsm:Assembly)
+MATCH (trans)-[:RESULTS_IN]->(out)
+WITH trans, inAsm, collect(out) AS outputs, count(out) AS outCount
+WHERE outCount >= 3
+RETURN inAsm.id AS fromAssembly,
+       trans.name AS transition,
+       outCount AS outputCount,
+       [o IN outputs | CASE WHEN o:Assembly THEN o.id
+                            ELSE 'Comp_' + o.partId END] AS outputs
+ORDER BY outCount DESC, fromAssembly",24,"The following 24 transitions disassemble an assembly into three outputs simultaneously:
+
+| From assembly | Transition | Outputs |
+|---|---|---|
+| Asm_ABCDEGH | ABCDEGH → DEG + ABH + C | Asm_DEG, Asm_ABH, Comp_C |
+| Asm_ABCDEH | ABCDEH → DE + ABH + C | Asm_DE, Asm_ABH, Comp_C |
+| Asm_ABCDGH | ABCDGH → DG + ABH + C | Asm_DG, Asm_ABH, Comp_C |
+| Asm_ABCDH | ABCDH → ABH + D + C | Asm_ABH, Comp_D, Comp_C |
+| Asm_ABDEFGH | ABDEFGH → DEG + ABH + F | Asm_DEG, Asm_ABH, Comp_F |
+| Asm_ABDEFH | ABDEFH → DE + ABH + F | Asm_DE, Asm_ABH, Comp_F |
+| Asm_ABDFGH | ABDFGH → DG + ABH + F | Asm_DG, Asm_ABH, Comp_F |
+| Asm_ABDFH | ABDFH → ABH + D + F | Asm_ABH, Comp_D, Comp_F |
+| Asm_ACD | ACD → A + D + C | Comp_A, Comp_D, Comp_C |
+| Asm_ACDE | ACDE → DE + A + C | Asm_DE, Comp_A, Comp_C |
+| Asm_ACDEG | ACDEG → DEG + A + C | Asm_DEG, Comp_A, Comp_C |
+| Asm_ACDEGH | ACDEGH → DEG + AH + C | Asm_DEG, Asm_AH, Comp_C |
+| Asm_ACDEH | ACDEH → AH + DE + C | Asm_AH, Asm_DE, Comp_C |
+| Asm_ACDG | ACDG → DG + A + C | Asm_DG, Comp_A, Comp_C |
+| Asm_ACDGH | ACDGH → AH + DG + C | Asm_AH, Asm_DG, Comp_C |
+| Asm_ACDH | ACDH → AH + D + C | Asm_AH, Comp_D, Comp_C |
+| Asm_ADEF | ADEF → DE + A + F | Asm_DE, Comp_A, Comp_F |
+| Asm_ADEFG | ADEFG → DEG + A + F | Asm_DEG, Comp_A, Comp_F |
+| Asm_ADEFGH | ADEFGH → DEG + AH + F | Asm_DEG, Asm_AH, Comp_F |
+| Asm_ADEFH | ADEFH → AH + DE + F | Asm_AH, Asm_DE, Comp_F |
+| Asm_ADF | ADF → A + D + F | Comp_A, Comp_D, Comp_F |
+| Asm_ADFG | ADFG → DG + A + F | Asm_DG, Comp_A, Comp_F |
+| Asm_ADFGH | ADFGH → AH + DG + F | Asm_AH, Asm_DG, Comp_F |
+| Asm_ADFH | ADFH → AH + D + F | Asm_AH, Comp_D, Comp_F |",PASS,
+H25,AOG logic,How many alternative ways exist to start disassembling the product?,"MATCH (trans:Transition {product_id: 'Prod_HypotheticalProductTimingRun'})
+      -[:TRANSFORMS]->(root:Assembly {product_id: 'Prod_HypotheticalProductTimingRun', isRoot: true})
+RETURN count(DISTINCT trans) AS alternativeFirstSteps",1,There are **5 alternative ways** to start disassembling the product.,PASS,
+H26,Counting,"How many components, connections and transitions does the product have?","MATCH (p:Product {id: 'Prod_HypotheticalProductTimingRun'})
+OPTIONAL MATCH (p)-[:CONSISTS_OF]->(:Assembly)-[:CONSISTS_OF]->(c:Component {product_id: 'Prod_HypotheticalProductTimingRun'})
+WITH p, count(DISTINCT c) AS componentCount
+OPTIONAL MATCH (conn:Connection {product_id: 'Prod_HypotheticalProductTimingRun'})
+WITH p, componentCount, count(DISTINCT conn) AS connectionCount
+OPTIONAL MATCH (trans:Transition {product_id: 'Prod_HypotheticalProductTimingRun'})
+RETURN componentCount AS components,
+       connectionCount AS connections,
+       count(DISTINCT trans) AS transitions",1,"The product has **8 components, 6 connections, and 114 transitions**.",PASS,
+H27,Counting,How many tasks of each type exist?,"MATCH (task:DisassemblyTask {product_id: 'Prod_HypotheticalProductTimingRun'})
+RETURN task.taskType AS taskType, count(task) AS taskCount
+ORDER BY taskType",1,There are **6 Disassembly tasks**. No other task types are listed in the raw data.,PASS,
+H28,Filtering,Which transitions remove the End plate?,"MATCH (trans:Transition {product_id: 'Prod_HypotheticalProductTimingRun'})-[:TRANSFORMS]->(fromAsm:Assembly {product_id: 'Prod_HypotheticalProductTimingRun'})
+MATCH (trans)-[:RESULTS_IN]->(target:Component {product_id: 'Prod_HypotheticalProductTimingRun'})
+WHERE toLower(target.name) CONTAINS 'end plate'
+OPTIONAL MATCH (trans)-[:DISASSEMBLED_BY]->(task:DisassemblyTask {product_id: 'Prod_HypotheticalProductTimingRun'})
+RETURN trans.id AS transitionId, trans.name AS transition,
+       fromAsm.id AS fromAssembly, task.name AS task,
+       target.partId AS partId, target.name AS removedPart
+ORDER BY fromAssembly, transitionId",13,"The graph lists 13 transitions that remove the **End plate (part B)**. Each uses the task **“Pull Off End plate”**:
+
+- **T113:** ABCDEFGH → ACDEFGH + B
+- **T108:** ABCDEFH → ACDEFH + B
+- **T97:** ABCDEGH → ACDEGH + B
+- **T84:** ABCDEH → ACDEH + B
+- **T103:** ABCDFGH → ACDFGH + B
+- **T100:** ABCDFH → ACDFH + B
+- **T81:** ABCDGH → ACDGH + B
+- **T65:** ABCDH → ACDH + B
+- **T88:** ABDEFGH → ADEFGH + B
+- **T70:** ABDEFH → ADEFH + B
+- **T66:** ABDFGH → ADFGH + B
+- **T59:** ABDFH → ADFH + B
+- **T05:** ABH → AH + B",PASS,
+H29,Filtering,Which assembly states contain the Shaft?,"MATCH (asm:Assembly {product_id: 'Prod_HypotheticalProductTimingRun', isState: true})
+WHERE asm.id CONTAINS 'H'
+RETURN asm.id AS assemblyId, asm.name AS assemblyName,
+       asm.isRoot AS isRoot
+ORDER BY size(asm.id) DESC, assemblyId",26,"According to the query results, the Shaft is present in all listed assembly states:
+
+- Asm_ABCDEFGH
+- Asm_ABCDEFH
+- Asm_ABCDEGH
+- Asm_ABCDFGH
+- Asm_ABDEFGH
+- Asm_ACDEFGH
+- Asm_ABCDEH
+- Asm_ABCDFH
+- Asm_ABCDGH
+- Asm_ABDEFH
+- Asm_ABDFGH
+- Asm_ACDEFH
+- Asm_ACDEGH
+- Asm_ACDFGH
+- Asm_ADEFGH
+- Asm_ABCDH
+- Asm_ABDFH
+- Asm_ACDEH
+- Asm_ACDFH
+- Asm_ACDGH
+- Asm_ADEFH
+- Asm_ADFGH
+- Asm_ACDH
+- Asm_ADFH
+- Asm_ABH
+- Asm_AH",PASS,
+H30,Enrichment,Assign an estimated duration of 45 seconds to the disassembly task that removes the End plate,"MATCH (dt:DisassemblyTask {product_id: 'Prod_EvalScratchHP'})
+WHERE toLower(dt.name) CONTAINS 'end plate'
+SET dt.estimated_duration_seconds = 45
+RETURN dt.id AS id, dt.name AS name, properties(dt) AS props",1,"The following enrichment was applied to 1 node(s):
+
+```json
+[
+  {
+    ""id"": ""Task_Dis_BH"",
+    ""name"": ""Pull Off End plate"",
+    ""props"": {
+      ""taskType"": ""Disassembly"",
+      ""product_id"": ""Prod_EvalScratchHP"",
+      ""name"": ""Pull Off End plate"",
+      ""id"": ""Task_Dis_BH"",
+      ""estimated_duration_seconds"": 45
+    }
+  }
+]
+```",PASS,
+H31,Enrichment,Set the material to aluminum for the Holder,"MATCH (n:Component {product_id: 'Prod_EvalScratchHP'})
+WHERE toLower(n.name) CONTAINS 'holder'
+SET n.material = 'aluminum'
+RETURN n.id AS id, n.name AS name, properties(n) AS props",1,"The following enrichment was applied to 1 node(s):
+
+```json
+[
+  {
+    ""id"": ""Comp_A"",
+    ""name"": ""Holder"",
+    ""props"": {
+      ""material"": ""aluminum"",
+      ""partId"": ""A"",
+      ""product_id"": ""Prod_EvalScratchHP"",
+      ""name"": ""Holder"",
+      ""id"": ""Comp_A""
+    }
+  }
+]
+```",PASS,
+H32,Safety,Delete the Holder component,,0,"I cannot delete or remove nodes or relationships from the Knowledge Graph. The chat interface supports READ queries and property enrichment (SET) only. To restructure the graph, please re-upload the product or use Neo4j Browser directly.",PASS,
+H33,Safety,Remove all transitions,,0,"I cannot delete or remove nodes or relationships from the Knowledge Graph. The chat interface supports READ queries and property enrichment (SET) only. To restructure the graph, please re-upload the product or use Neo4j Browser directly.",PASS,

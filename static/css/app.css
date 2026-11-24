@@ -1,0 +1,246 @@
+/* KG Platform: design tokens and reusable component classes.
+ *
+ * Defines the tokens and the `.btn-*`, `.kg-modal-*` and `.kg-legend*`
+ * classes used by static/app.html, static/js/studio.js and static/js/graph.js.
+ *
+ * Loads AFTER the Tailwind CDN, so these rules win on equal specificity where
+ * intended. */
+
+:root {
+  /* Brand */
+  --navy: #0E2841;
+  --blue: #156082;
+  --orange: #E97132;
+  --teal: #0E6B7A;
+
+  /* Neutrals */
+  --gray-50:  #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-500: #64748b;
+  --gray-700: #334155;
+  --gray-900: #0f172a;
+
+  /* Semantic */
+  --success: #15803d;
+  --danger:  #b91c1c;
+  --warning: #b45309;
+  --info:    var(--blue);
+
+  /* Surfaces / lines / focus */
+  --surface:     #ffffff;
+  --surface-alt: var(--gray-50);
+  --border:      var(--gray-200);
+  --focus-ring:  rgba(21, 96, 130, 0.45);
+
+  /* Scale */
+  --radius:    8px;
+  --radius-sm: 6px;
+  --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 1px rgba(15, 23, 42, 0.04);
+  --shadow-2: 0 10px 30px rgba(15, 23, 42, 0.18);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
+  white-space: nowrap;
+}
+.btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-primary   { background: var(--blue);  color: #fff; }
+.btn-primary:hover:not(:disabled)   { background: #11506e; }
+.btn-secondary { background: var(--surface); color: var(--gray-700); border-color: var(--border); }
+.btn-secondary:hover:not(:disabled) { background: var(--gray-50); }
+.btn-danger    { background: var(--danger); color: #fff; }
+.btn-danger:hover:not(:disabled)    { background: #991b1b; }
+.btn-accent    { background: var(--orange); color: #fff; }
+.btn-accent:hover:not(:disabled)    { background: #d5611f; }
+.btn-ghost     { background: transparent; color: var(--gray-700); }
+.btn-ghost:hover:not(:disabled)     { background: var(--gray-100); }
+.btn-sm { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
+
+/* ── Accessible modal ────────────────────────────────────────────────────── */
+.kg-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+}
+.kg-modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-2);
+  width: min(640px, 100%);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.kg-modal--wide { width: min(960px, 100%); }
+.kg-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.kg-modal-title { font-size: 1.05rem; font-weight: 700; color: var(--gray-900); }
+.kg-modal-body { padding: 1.25rem; overflow: auto; }
+.kg-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface-alt);
+}
+.kg-modal-close {
+  border: none;
+  background: transparent;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--gray-500);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+}
+.kg-modal-close:hover { color: var(--gray-900); background: var(--gray-100); }
+.kg-modal-close:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
+
+/* ── Graph legend ────────────────────────────────────────────────────────── */
+.kg-legend {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-1);
+  padding: 0.5rem 0.65rem;
+  font-size: 0.75rem;
+  max-width: 220px;
+  z-index: 5;
+}
+.kg-legend-title {
+  font-weight: 700;
+  color: var(--gray-700);
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.kg-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.12rem 0;
+  color: var(--gray-700);
+  cursor: pointer;
+}
+.kg-legend-item.is-dimmed { opacity: 0.4; }
+.kg-legend-swatch {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 3px;
+  flex: none;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.kg-legend-line {
+  width: 0.9rem;
+  height: 3px;
+  border-radius: 2px;
+  flex: none;
+}
+.kg-legend-sep {
+  border-top: 1px solid var(--border);
+  margin: 0.3rem 0;
+}
+.kg-legend-body {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+/* ── Graph hover tooltip (initGraphTooltips) ─────────────────────────────── */
+.kg-tooltip {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  background: rgba(15, 23, 42, 0.92);
+  color: #f8fafc;
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  max-width: 260px;
+  box-shadow: var(--shadow-1);
+}
+.kg-tooltip-type {
+  display: inline-block;
+  margin-left: 0.4rem;
+  color: #94a3b8;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.kg-tooltip-explain {
+  margin-top: 0.25rem;
+  color: #cbd5e1;
+}
+
+/* ── Metric bar ──────────────────────────────────────────────────────────── */
+.kg-metric-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.kg-metric {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.9rem;
+  min-width: 96px;
+}
+.kg-metric-value { font-size: 1.25rem; font-weight: 700; color: var(--navy); line-height: 1.1; }
+.kg-metric-label { font-size: 0.72rem; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.02em; }
+
+/* Utility: visually-hidden but screen-reader available */
+.kg-sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Spinner for graph loading overlays */
+.kg-spinner {
+  width: 1.7rem; height: 1.7rem;
+  border: 3px solid var(--gray-200);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: kg-spin 0.8s linear infinite;
+}
+@keyframes kg-spin { to { transform: rotate(360deg); } }

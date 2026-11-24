@@ -1,0 +1,23 @@
+{
+  "product": {
+    "id": "Prod_CentrifugalPump",
+    "name": "Centrifugal Pump"
+  },
+  "states": 102,
+  "arcs": 340,
+  "violations": {
+    "partition": 0,
+    "reduction": 0,
+    "connectedness": 0,
+    "unique_root": 0,
+    "closure": 0,
+    "reachability": 0
+  },
+  "root_is_full_assembly": true,
+  "states_without_transition": 0,
+  "states_reached_from_root": 102,
+  "additional_checks": {
+    "progress": 0
+  },
+  "all_hold": true
+}

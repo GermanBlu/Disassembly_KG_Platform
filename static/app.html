@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KG Platform</title>
+  <!-- Vendored locally (static/vendor/) so the offline Docker demo renders without CDN access -->
+  <script src="/static/vendor/tailwind-play-3.4.16.min.js"></script>
+  <script src="/static/vendor/cytoscape-3.28.1.min.js"></script>
+  <script src="/static/vendor/dagre-0.8.5.min.js"></script>
+  <script src="/static/vendor/cytoscape-dagre-2.5.0.min.js"></script>
+  <script src="/static/vendor/layout-base-2.0.1.min.js"></script>
+  <script src="/static/vendor/cose-base-2.2.0.min.js"></script>
+  <script src="/static/vendor/cytoscape-fcose-2.2.0.min.js"></script>
+  <script src="/static/vendor/lucide-0.460.0.min.js"></script>
+  <script src="/static/js/graph.js"></script>
+  <script src="/static/js/studio.js"></script>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <style>
+    :root { --navy:#0E2841; --blue:#156082; --orange:#E97132; --teal:#0E6B7A; }
+    *{ -webkit-font-smoothing:antialiased; }
+    body{ font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif; }
+    ::-webkit-scrollbar{ width:9px; height:9px; } ::-webkit-scrollbar-thumb{ background:#cdd7e3; border-radius:6px; } ::-webkit-scrollbar-track{ background:transparent; }
+    .nav-item{ display:flex; align-items:center; gap:.7rem; padding:.55rem .8rem; border-radius:11px; color:#52617a; font-weight:500; font-size:.9rem; cursor:pointer; transition:all .12s; }
+    .nav-item:hover{ background:#eef2f7; color:#0f172a; }
+    .nav-item.active{ background:var(--navy); color:#fff; box-shadow:0 6px 16px rgba(14,40,65,.22); }
+    .kg-card{ background:#fff; border:1px solid #e7edf4; border-radius:16px; box-shadow:0 1px 2px rgba(16,40,65,.04); }
+    .kg-card.click{ cursor:pointer; transition:all .15s; }
+    .kg-card.click:hover{ box-shadow:0 12px 30px rgba(16,40,65,.10); transform:translateY(-3px); border-color:#d7e0ea; }
+    .seg{ display:inline-flex; gap:2px; background:#eef2f7; padding:3px; border-radius:11px; }
+    .seg button{ padding:.35rem .72rem; border-radius:8px; font-size:.78rem; font-weight:500; color:#64748b; white-space:nowrap; transition:all .1s; }
+    .seg button:hover{ color:#0f172a; }
+    .seg button.active{ background:#fff; color:var(--navy); box-shadow:0 1px 3px rgba(16,40,65,.12); font-weight:600; }
+    .metric{ background:#fff; border:1px solid #e7edf4; border-radius:13px; padding:.65rem 1.1rem; min-width:120px; }
+    .metric .v{ font-size:1.45rem; font-weight:700; color:var(--navy); line-height:1.1; letter-spacing:-.01em; }
+    .metric .l{ font-size:.68rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:.04em; margin-top:1px; }
+    .btn{ display:inline-flex; align-items:center; justify-content:center; gap:.45rem; padding:.5rem .9rem; font-size:.85rem; font-weight:600; border-radius:10px; cursor:pointer; transition:all .12s; border:1px solid transparent; white-space:nowrap; }
+    .btn-primary{ background:var(--blue); color:#fff; } .btn-primary:hover{ background:#114f6c; box-shadow:0 6px 16px rgba(21,96,130,.28); }
+    .btn-accent{ background:var(--orange); color:#fff; } .btn-accent:hover{ background:#d5611f; box-shadow:0 6px 16px rgba(233,113,50,.3); }
+    .btn-ghost{ background:#fff; color:#475569; border-color:#e2e8f0; } .btn-ghost:hover{ background:#f8fafc; border-color:#cbd5e1; }
+    .btn-icon{ width:36px; height:36px; padding:0; border-radius:10px; }
+    .drop{ border:2px dashed #c6d2e0; border-radius:18px; transition:all .15s; background:#fbfdff; }
+    .drop.drag{ border-color:var(--blue); background:#eef6fb; }
+    .bubble-u{ background:var(--blue); color:#fff; border-radius:14px 14px 4px 14px; }
+    .bubble-b{ background:#f1f5f9; color:#1e293b; border-radius:14px 14px 14px 4px; }
+    #cy{ width:100%; height:100%; }
+    .fade-in{ animation:fi .25s ease; } @keyframes fi{ from{opacity:0; transform:translateY(6px);} to{opacity:1;transform:none;} }
+    .spin{ width:1.6rem;height:1.6rem;border:3px solid #e2e8f0;border-top-color:var(--blue);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto; } @keyframes sp{to{transform:rotate(360deg);}}
+  </style>
+</head>
+<body class="h-screen flex bg-[#f5f8fc] text-slate-800 overflow-hidden">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────── -->
+  <aside class="w-60 flex-none bg-white border-r border-slate-200 flex flex-col">
+    <div class="px-5 pt-5 pb-4">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white" style="background:linear-gradient(135deg,var(--navy),var(--blue))">
+          <i data-lucide="boxes" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="font-bold text-[15px] leading-tight text-slate-900">KG Platform</div>
+          <div class="text-[11px] text-slate-400 leading-tight">Disassembly Knowledge</div>
+        </div>
+      </div>
+    </div>
+    <nav class="px-3 space-y-1 mt-2">
+      <div class="nav-item" data-nav="products" onclick="go('#/products')"><i data-lucide="layout-grid" class="w-[18px] h-[18px]"></i> Products</div>
+      <div class="nav-item" data-nav="library" onclick="go('#/library')"><i data-lucide="library" class="w-[18px] h-[18px]"></i> Library</div>
+    </nav>
+    <div class="px-3 mt-4">
+      <button onclick="go('#/new')" class="btn btn-accent w-full demo-hide"><i data-lucide="plus" class="w-4 h-4"></i> New Product</button>
+    </div>
+    <div class="mt-auto px-5 py-4 text-[11px] text-slate-400 border-t border-slate-100">
+      <div id="demo-badge" class="hidden mb-2 inline-flex items-center gap-1 px-2 py-1 rounded-md bg-amber-50 text-amber-700 font-semibold"><i data-lucide="lock" class="w-3 h-3"></i> Read-only demo</div>
+      <div>STEP → Neo4j → GraphRAG</div>
+    </div>
+  </aside>
+
+  <!-- ── Main ────────────────────────────────────────────────── -->
+  <main id="main" class="flex-1 min-w-0 h-full overflow-hidden"></main>
+
+<script>
+// ── API ──────────────────────────────────────────────────────────
+const API = {
+  config:        () => '/api/config',
+  products:      () => '/api/products',
+  product:       (id) => `/api/products/${encodeURIComponent(id)}`,
+  graph:         (id, v, mode) => `/api/products/${encodeURIComponent(id)}/graph?view=${v}${mode ? `&mode=${mode}` : ''}`,
+  chat:          (id) => `/api/products/${encodeURIComponent(id)}/chat`,
+  seqCount:      (id) => `/api/products/${encodeURIComponent(id)}/sequence-count`,
+  library:       () => '/api/library',
+  libraryGraph:  () => '/api/library/graph',
+  libraryItems:  (label) => `/api/library/items/${label}`,
+  algorithms:    () => '/api/pipeline/algorithms',
+  stepRun:            () => '/api/step/run',
+  stepCheck:          () => '/api/step/check',
+  stepGenerateTables: () => '/api/step/generate-tables',
+  stepSuggestGroups:  () => '/api/step/suggest-groups',
+  stepTaskNames:      () => '/api/step/task-names',
+  validate:           () => '/api/validate',
+};
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let DEMO = false;
+// Starter chips come from the eval catalog via /api/chat/starters (single
+// source of truth with the GraphRAG eval harness); this list is the fallback.
+let _STARTERS = [
+  'What components are in this product?',
+  'What connection types are used in this product?',
+  'What is the first step to disassemble this product?',
+  'Generate a complete disassembly sequence for this product.',
+  'Which skills do the disassembly tasks of this product require?',
+  'How many transitions does the product have?',
+];
+function toast(msg){
+  const t = document.createElement('div');
+  t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-sm px-4 py-2.5 rounded-xl shadow-lg z-50 fade-in';
+  t.textContent = msg; document.body.appendChild(t);
+  setTimeout(() => { t.style.transition = 'opacity .3s'; t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2600);
+}
+// Destructive actions confirm with a second click within 4 s, because native
+// confirm() dialogs are suppressed in some embedded browsers (confirm() returns false).
+const _armedAt = {};
+function confirmTwice(key, msg){
+  if (Date.now() - (_armedAt[key] || 0) < 4000){ delete _armedAt[key]; return true; }
+  _armedAt[key] = Date.now(); toast(msg); return false;
+}
+const VIEWS = ['structure','precedence','tasks','resources','connections','reversibility','full'];
+const VIEW_DESC = {
+  structure: 'Product → assemblies → components (what it is made of).',
+  precedence: 'Assembly states and the transitions between them (removal order).',
+  tasks: 'Disassembly transitions, their tasks, and the connections they break.',
+  resources: 'Tasks and the agents, tools and skills they require.',
+  connections: 'Components and how they are connected (joints & types).',
+  reversibility: 'State graph colored by reversibility — green steps break non-destructive (re-assemblable) connections, red destructive ones.',
+  full: 'Everything: components, connections, transitions, tasks and resources.',
+};
+// Pretty labels + unit formatting for node properties in the detail panel.
+const PROP_META = {
+  duration_s:       { label: 'Duration',       fmt: v => `${v} s` },
+  cost_eur:         { label: 'Cost',           fmt: v => `€${(+v).toFixed(2)}` },
+  labor_cost_eur:   { label: 'Labor cost',     fmt: v => `€${(+v).toFixed(2)}` },
+  tool_cost_eur:    { label: 'Tool cost',      fmt: v => `€${(+v).toFixed(2)}` },
+  usage_cost_eur:   { label: 'Usage cost',     fmt: v => `€${(+v).toFixed(2)}` },
+  difficulty:       { label: 'Difficulty' },
+  force_n:          { label: 'Force',          fmt: v => `${v} N` },
+  mass_g:           { label: 'Mass',           fmt: v => `${v} g` },
+  material:         { label: 'Material' },
+  recyclable:       { label: 'Recyclable',     fmt: v => (v === true || v === 'true') ? 'Yes' : 'No' },
+  eol_route:        { label: 'End-of-life' },
+  labor_rate_eur_h: { label: 'Labor rate',     fmt: v => `€${v}/h` },
+  taskType:         { label: 'Type' },
+  destructiveness:  { label: 'Destructiveness' },
+  agentType:        { label: 'Agent type' },
+  toolType:         { label: 'Tool type' },
+  description:      { label: 'Description' },
+  partId:           { label: 'Part ID' },
+};
+
+// ── Router ───────────────────────────────────────────────────────
+function go(hash){ if(location.hash===hash) route(); else location.hash = hash; }
+async function route(){
+  const h = location.hash || '#/products';
+  const main = $('main');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (h.startsWith('#/product/')) { await renderProduct(decodeURIComponent(h.slice('#/product/'.length))); }
+  else if (h.startsWith('#/library')) { document.querySelector('[data-nav=library]')?.classList.add('active'); await renderLibrary(); }
+  else if (h.startsWith('#/new')) { renderStudio(); }  // studio shows a locked explainer in demo
+  else { document.querySelector('[data-nav=products]')?.classList.add('active'); await renderProducts(); }
+  lucide.createIcons();
+}
+window.addEventListener('hashchange', route);
+
+// ── Shared: page header ──────────────────────────────────────────
+function pageHeader({ title, subtitle, back, actions }){
+  return `<div class="flex items-center justify-between px-8 py-5 border-b border-slate-200 bg-white/70 backdrop-blur">
+    <div class="flex items-center gap-3 min-w-0">
+      ${back ? `<button onclick="go('${back}')" class="btn btn-ghost btn-icon"><i data-lucide="arrow-left" class="w-4 h-4"></i></button>` : ''}
+      <div class="min-w-0"><h1 class="text-xl font-bold text-slate-900 truncate">${esc(title)}</h1>
+      ${subtitle ? `<p class="text-xs text-slate-400 font-mono truncate">${esc(subtitle)}</p>` : ''}</div>
+    </div>
+    <div class="flex items-center gap-2">${actions || ''}</div>
+  </div>`;
+}
+
+// ── View: Products ───────────────────────────────────────────────
+async function renderProducts(){
+  $('main').innerHTML = `
+    ${pageHeader({ title:'Products', subtitle:'', actions:`
+      <div class="relative"><input id="prod-search" oninput="_filterProducts(this.value)" placeholder="Search…" class="btn-ghost btn pl-9 pr-3 w-56 font-normal" style="cursor:text">
+      <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i></div>
+      <button onclick="go('#/new')" class="btn btn-accent demo-hide"><i data-lucide="plus" class="w-4 h-4"></i> New</button>`})}
+    <div class="h-[calc(100%-81px)] overflow-y-auto p-8"><div id="prod-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"><div class="text-slate-400 text-sm">Loading…</div></div></div>`;
+  lucide.createIcons();
+  const products = await (await fetch(API.products())).json();
+  window._products = products;
+  _paintProducts(products);
+}
+function _filterProducts(q){ q=q.toLowerCase(); _paintProducts((window._products||[]).filter(p=>p.name.toLowerCase().includes(q)||p.id.toLowerCase().includes(q))); }
+function _paintProducts(products){
+  const grid = $('prod-grid');
+  if (!products.length){ grid.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center py-24 text-center text-slate-400">
+    <i data-lucide="package-open" class="w-14 h-14 mb-3 stroke-1"></i><p class="text-lg font-semibold text-slate-500">No products yet</p>
+    <p class="text-sm mt-1">Create one from a STEP file or JSON.</p>
+    <button onclick="go('#/new')" class="btn btn-accent mt-4 demo-hide"><i data-lucide="plus" class="w-4 h-4"></i> New Product</button></div>`; lucide.createIcons(); return; }
+  grid.innerHTML = products.map(p => `
+    <div class="kg-card click p-5 fade-in group relative" onclick="go('#/product/${encodeURIComponent(p.id)}')">
+      ${DEMO?'':`<button onclick="event.stopPropagation();_delProduct('${esc(p.id)}','${esc(p.name)}')" class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-500 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`}
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center text-white flex-none" style="background:linear-gradient(135deg,var(--navy),var(--blue))"><i data-lucide="box" class="w-5 h-5"></i></div>
+        <div class="min-w-0"><h3 class="font-bold text-slate-900 truncate">${esc(p.name)}</h3><p class="text-[11px] text-slate-400 font-mono truncate">${esc(p.id)}</p></div>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div class="rounded-xl bg-slate-50 p-3 text-center"><div class="text-xl font-bold text-slate-800">${p.components ?? '–'}</div><div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wide">Components</div></div>
+        <div class="rounded-xl bg-violet-50 p-3 text-center"><div class="text-xl font-bold text-violet-700">${p.transitions ?? '–'}</div><div class="text-[10px] text-violet-400 font-semibold uppercase tracking-wide">Transitions</div></div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-end gap-1.5 text-sm font-semibold text-blue-600 group-hover:gap-2.5 transition-all">Open dashboard <i data-lucide="arrow-right" class="w-4 h-4"></i></div>
+    </div>`).join('');
+  lucide.createIcons();
+}
+async function _delProduct(id, name){
+  if (!confirmTwice('product:' + id, `Click the trash icon again to delete "${name}" and all its graph nodes.`)) return;
+  const resp = await fetch(API.product(id), { method:'DELETE' });
+  toast(resp.ok ? `${name} deleted.` : `Delete failed (HTTP ${resp.status})`);
+  renderProducts();
+}
+
+// ── View: Product detail ─────────────────────────────────────────
+let cy = null, _chatOpen = true, _curProduct = null, _curView = 'structure';
+async function renderProduct(id){
+  const prod = await (await fetch(API.product(id))).json().catch(()=>null);
+  if (!prod || prod.error){ $('main').innerHTML = pageHeader({title:'Product not found', back:'#/products'}); lucide.createIcons(); return; }
+  _curProduct = prod;
+  $('main').innerHTML = `
+    ${pageHeader({ title:prod.name, subtitle:prod.id, back:'#/products', actions:`
+      <button onclick="_toggleChat()" id="chat-toggle" class="btn btn-ghost"><i data-lucide="message-circle" class="w-4 h-4"></i> Ask</button>`})}
+    <div class="px-8 pt-4 pb-3 flex flex-wrap gap-3" id="metrics"></div>
+    <div class="flex gap-4 px-8 pb-6 h-[calc(100%-200px)] min-h-0">
+      <!-- Graph -->
+      <div class="kg-card flex-1 min-w-0 flex flex-col overflow-hidden">
+        <div class="flex items-start gap-3 px-4 py-3 border-b border-slate-100 flex-wrap">
+          <div class="seg" id="view-seg" style="flex-wrap:wrap">${VIEWS.map(v=>`<button data-v="${v}" onclick="_switchView('${v}')" title="${esc(VIEW_DESC[v]||'')}">${v[0].toUpperCase()+v.slice(1)}</button>`).join('')}</div>
+          <label id="condense-toggle" style="display:none" class="ml-auto items-center gap-1.5 text-[11px] text-slate-500 cursor-pointer select-none" title="Collapse single-part-removal transitions into labeled edges">
+            <input id="condense-cb" type="checkbox" checked onchange="_toggleCondensed()" class="accent-blue-600 w-3.5 h-3.5 align-middle"> Condensed
+          </label>
+          <div class="relative ml-auto" id="graph-search-wrap"><input id="graph-search" oninput="filterGraphNodes(cy,this.value)" placeholder="Find node…" class="border border-slate-200 rounded-lg pl-8 pr-3 py-1.5 text-xs w-40 focus:ring-2 focus:ring-blue-200 focus:outline-none">
+          <i data-lucide="search" class="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400"></i></div>
+          <button onclick="_exportPng()" class="btn btn-ghost btn-icon" title="Export PNG"><i data-lucide="download" class="w-4 h-4"></i></button>
+        </div>
+        <div id="view-desc" class="px-4 py-1.5 text-[11px] text-slate-400 border-b border-slate-50">${esc(VIEW_DESC.structure)}</div>
+        <div class="relative flex-1 min-h-0 bg-[#fbfdff]"><div id="cy"></div>
+          <div id="node-detail" class="hidden absolute top-3 right-3 w-72 kg-card p-4 z-10 fade-in" style="max-height:calc(100% - 24px);overflow-y:auto">
+            <button onclick="_closeDetail()" class="absolute top-2.5 right-2.5 text-slate-300 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <div id="nd-body"></div>
+          </div>
+          <button id="reset-view" onclick="_resetView()" class="hidden absolute top-3 left-3 btn btn-ghost bg-white/90 text-xs z-10"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset view</button>
+          <div class="absolute bottom-3 right-3 flex gap-1.5">
+            <button onclick="cy&&cy.fit(undefined,40)" class="btn btn-ghost btn-icon bg-white/90" title="Fit"><i data-lucide="maximize" class="w-4 h-4"></i></button>
+            <button onclick="cy&&cy.zoom(cy.zoom()*1.3)" class="btn btn-ghost btn-icon bg-white/90" title="Zoom in"><i data-lucide="zoom-in" class="w-4 h-4"></i></button>
+            <button onclick="cy&&cy.zoom(cy.zoom()*0.77)" class="btn btn-ghost btn-icon bg-white/90" title="Zoom out"><i data-lucide="zoom-out" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      </div>
+      <!-- Chat -->
+      <div id="chat-panel" class="kg-card w-[360px] flex-none flex flex-col overflow-hidden">
+        <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4 text-blue-600"></i><span class="font-semibold text-sm text-slate-800">Ask the Knowledge Graph</span></div>
+        <div id="chat-msgs" class="flex-1 min-h-0 overflow-y-auto p-4 space-y-3">
+          <div class="text-center text-sm text-slate-400 pt-8 pb-3">Ask anything about this product's<br>assembly &amp; disassembly.</div>
+          <div class="flex flex-wrap gap-1.5 justify-center">${_STARTERS.map(q=>`<button onclick='_askAbout(${JSON.stringify(q)})' class="text-[11px] px-2.5 py-1 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-blue-300 transition">${esc(q)}</button>`).join('')}</div>
+        </div>
+        <div class="p-3 border-t border-slate-100"><div class="flex gap-2">
+          <input id="chat-in" onkeydown="if(event.key==='Enter')sendChat()" placeholder="e.g. What is the first step to disassemble this product?" class="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-blue-200 focus:outline-none">
+          <button onclick="sendChat()" class="btn btn-primary btn-icon"><i data-lucide="send" class="w-4 h-4"></i></button></div></div>
+      </div>
+    </div>`;
+  lucide.createIcons();
+  // metrics
+  $('metrics').innerHTML =
+    _metric(prod.components?.length ?? prod.components ?? 0,'Components','structure') +
+    _metric(prod.connections ?? 0,'Connections','connections') +
+    _metric(prod.transitions ?? 0,'Transitions','precedence') +
+    _metric('<span id="seq-v">…</span>','Sequences','full');
+  fetch(API.seqCount(id)).then(r=>r.json()).then(d=>{
+    const el = $('seq-v'); if(!el || d.count==null) return;
+    el.textContent = d.count.toLocaleString('en-US');
+    if(d.ordering_count!=null) el.closest('.metric').title = `${d.count.toLocaleString('en-US')} complete disassembly sequences, ${d.ordering_count.toLocaleString('en-US')} orders of execution`;
+  }).catch(()=>{});
+  // graph
+  cy = cytoscape({ container: $('cy'), style: cyStyle(), wheelSensitivity:0.3 });
+  cy.on('tap','node', e => { highlightNeighborhood(cy, e.target); showNodeDetail(e.target); });
+  cy.on('tap','edge', e => { showEdgeDetail(e.target, 'nd-body', 'node-detail'); });
+  cy.on('tap', e => { if (e.target===cy) { clearHighlight(cy); _closeDetail(); } });
+  initGraphTooltips(cy);
+  _switchView('structure');
+}
+function _metric(v,l,view){ return `<div class="metric${view?' cursor-pointer hover:border-blue-300 transition':''}"${view?` onclick="_switchView('${view}')" title="Show the ${l.toLowerCase()} view"`:''}><div class="v">${v}</div><div class="l">${l}</div></div>`; }
+let _condensed = true;   // state-graph views default to the compact rendering
+const _CONDENSABLE = ['precedence','reversibility'];
+function _toggleCondensed(){ _condensed = !_condensed; _switchView(_curView); }
+
+async function _switchView(v){
+  _curView = v;
+  document.querySelectorAll('#view-seg button').forEach(b=>b.classList.toggle('active', b.dataset.v===v));
+  const desc = $('view-desc'); if (desc) desc.textContent = VIEW_DESC[v] || '';
+  _closeDetail(); const rv = $('reset-view'); if (rv) rv.classList.add('hidden');
+  const ct = $('condense-toggle');
+  if (ct){ ct.style.display = _CONDENSABLE.includes(v) ? 'flex' : 'none'; const cb = $('condense-cb'); if (cb) cb.checked = _condensed; }
+  _overlay('loading','Loading '+v+'…');
+  try {
+    const mode = (_condensed && _CONDENSABLE.includes(v)) ? 'condensed' : null;
+    const resp = await fetch(API.graph(_curProduct.id, v, mode));
+    if (!resp.ok){ _overlay('error',`Couldn't load "${v}" (HTTP ${resp.status})`); return; }
+    const data = await resp.json();
+    if (!data.nodes || !data.nodes.length){ cy.elements().remove(); _overlay('empty',`No nodes in "${v}".`); return; }
+    _overlay(null); cy.resize(); renderGraph(cy, data, v);
+  } catch(e){ _overlay('error',`Couldn't load "${v}".`); }
+}
+function _overlay(kind,msg){
+  const host=$('cy'); if(!host) return; let o=$('cy-ov');
+  if(!kind){ if(o)o.remove(); return; }
+  if(!o){ o=document.createElement('div'); o.id='cy-ov'; o.style.cssText='position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(251,253,255,.9);z-index:6;text-align:center'; host.parentElement.appendChild(o); }
+  const ic = kind==='loading'?'<div class="spin"></div>':kind==='error'?'⚠️':'∅';
+  o.innerHTML = `<div class="text-slate-400 text-sm"><div class="text-2xl mb-1">${ic}</div>${esc(msg||'')}</div>`;
+}
+function _exportPng(){ if(!cy)return; const a=document.createElement('a'); a.href=cy.png({full:true,scale:2,bg:'#fff'}); a.download=(_curProduct?.id||'kg')+'-'+_curView+'.png'; a.click(); }
+function _toggleChat(){ _chatOpen=!_chatOpen; $('chat-panel').classList.toggle('hidden',!_chatOpen); }
+
+// ── Node & edge detail panels ────────────────────────────────────
+// Connected-list rows: one row per edge (direction arrow + relationship chip +
+// neighbor name) instead of a bare neighbor-name list.
+function _edgeRows(node, max=14){
+  return node.connectedEdges().slice(0,max).map(e => {
+    const out = e.source().id() === node.id();
+    const other = out ? e.target() : e.source();
+    const nc = (LABEL_COLORS[other.data('label')] && LABEL_COLORS[other.data('label')].bg) || '#999';
+    const t = e.data('type') || e.data('label') || '';
+    const ec = (typeof EDGE_COLORS !== 'undefined' && EDGE_COLORS[t]) || '#94a3b8';
+    return `<div class="flex items-center gap-1.5 text-xs py-0.5 min-w-0">
+      <span class="text-slate-300 shrink-0">${out ? '→' : '←'}</span>
+      <span class="shrink-0 text-[9px] font-semibold px-1 py-px rounded" style="background:${ec}22;color:${ec}">${esc(t)}</span>
+      <span class="w-2 h-2 rounded-sm shrink-0" style="background:${nc}"></span>
+      <span class="truncate">${esc(other.data('full')||other.data('display'))}</span>
+    </div>`;
+  }).join('') || '<div class="text-xs text-slate-400">—</div>';
+}
+
+// Edge tap → summary (relationship explained in plain language) rendered into
+// the given panel (product: nd-body/node-detail, library: lib-nd-body/lib-detail).
+function showEdgeDetail(edge, bodyId, panelId){
+  const s = edgeSummary(edge);
+  const extraRows = s.extra.map(({k,v}) => { const m = PROP_META[k] || {};
+    return `<div class="flex justify-between gap-3 py-0.5 text-xs"><span class="text-slate-400 shrink-0">${esc(m.label||k)}</span><span class="font-medium text-slate-700 text-right break-words">${esc(m.fmt?m.fmt(v):v)}</span></div>`; }).join('');
+  $(bodyId).innerHTML = `
+    <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded" style="background:${s.color}1f;color:${s.color}">${esc(s.type)}</span>
+    <h3 class="font-bold text-slate-900 text-sm mt-2 mb-1 break-words pr-4">${esc(s.title)}</h3>
+    <p class="text-xs text-slate-500 leading-relaxed mb-2">${esc(s.explain)}</p>
+    ${extraRows}`;
+  $(panelId).classList.remove('hidden');
+  lucide.createIcons();
+}
+
+function showNodeDetail(node){
+  const d = node.data(); const props = d.properties || {}; const type = d.label;
+  const name = d.full || d.display;
+  const c = (LABEL_COLORS[type] && LABEL_COLORS[type].bg) || '#64748b';
+  const edgeCount = node.connectedEdges().length;
+  const propRows = Object.entries(props).filter(([k]) => !['product_id','id','name'].includes(k))
+    .map(([k,v]) => { const m = PROP_META[k] || {}; const val = m.fmt ? m.fmt(v) : v;
+      return `<div class="flex justify-between gap-3 py-0.5 text-xs"><span class="text-slate-400 shrink-0">${esc(m.label||k)}</span><span class="font-medium text-slate-700 text-right break-words">${esc(val)}</span></div>`; }).join('')
+    || '<div class="text-xs text-slate-400 italic">No extra properties stored yet.</div>';
+  const nbrRows = _edgeRows(node);
+  const q = _askTemplate(type, name);
+  $('nd-body').innerHTML = `
+    <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded" style="background:${c}1f;color:${c}">${esc(type)}</span>
+    <h3 class="font-bold text-slate-900 text-sm mt-2 mb-2 break-words pr-4">${esc(name)}</h3>
+    <div class="mb-3">${propRows}</div>
+    <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-1">Connected (${edgeCount})</div>
+    <div class="mb-3 max-h-40 overflow-y-auto -mr-1 pr-1">${nbrRows}</div>
+    <button onclick='_askAbout(${JSON.stringify(q)})' class="btn btn-primary w-full text-xs"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Ask about this</button>`;
+  $('node-detail').classList.remove('hidden');
+  lucide.createIcons();
+}
+function _closeDetail(){ const n = $('node-detail'); if (n) n.classList.add('hidden'); }
+function _resetView(){ _switchView(_curView); }
+function _askAbout(q){ if (!_chatOpen) _toggleChat(); const i = $('chat-in'); if (i){ i.value = q; sendChat(); } }
+function _askTemplate(type, name){
+  const c = String(name).replace(/\s*\([^)]*\)$/,'').trim();
+  if (type === 'Component') return `How is the ${c} removed?`;
+  if (type === 'Fastener') return `How is the ${c} removed and what does it hold together?`;
+  if (type === 'DisassemblyTask' || type === 'Task') return `What does the task "${c}" involve — which tool, skill and agent?`;
+  if (type === 'Connection') return `What kind of connection is ${c} and how is it separated?`;
+  if (type === 'ConnectionType') return `What is a ${c} connection and how is it disassembled?`;
+  if (type === 'Agent') return `Which disassembly tasks can the ${c} perform?`;
+  if (type === 'Tool') return `Which tasks use the ${c}?`;
+  if (type === 'DisassemblySkill' || type === 'Skill') return `Which tasks require the "${c}" skill?`;
+  if (type === 'Assembly') return `What can be removed from the assembly state ${c}?`;
+  return `Tell me about ${c}.`;
+}
+function _fmt(t){
+  return esc(t)
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+    .replace(/`([^`]+)`/g, '<code class="bg-slate-100 rounded px-1 text-[.85em]">$1</code>')
+    .replace(/^\s*[-•*]\s+(.+)$/gm, '<div class="flex gap-1.5 my-0.5"><span class="text-blue-400">•</span><span>$1</span></div>')
+    .replace(/\n/g, '<br>');
+}
+
+// ── Chat (SSE) ───────────────────────────────────────────────────
+let _hist = [];
+async function sendChat(){
+  const inp=$('chat-in'); const q=inp.value.trim(); if(!q) return; inp.value='';
+  const msgs=$('chat-msgs'); if(msgs.children.length===1 && msgs.firstElementChild.classList.contains('text-center')) msgs.innerHTML='';
+  msgs.insertAdjacentHTML('beforeend', `<div class="flex justify-end fade-in"><div class="bubble-u px-3.5 py-2 text-sm max-w-[85%]">${esc(q)}</div></div>`);
+  const bid='b'+Date.now();
+  msgs.insertAdjacentHTML('beforeend', `<div class="flex fade-in"><div class="bubble-b px-3.5 py-2 text-sm max-w-[92%]"><div id="${bid}-s" class="text-xs text-slate-400 mb-1 flex items-center gap-1.5"><div class="spin" style="width:.8rem;height:.8rem;border-width:2px"></div>Thinking…</div><div id="${bid}-cy" class="hidden mb-1.5"></div><div id="${bid}-t" class="leading-relaxed"></div></div></div>`);
+  msgs.scrollTop=msgs.scrollHeight; _hist.push({role:'user',content:q});
+  try{
+    const resp = await fetch(API.chat(_curProduct.id), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message:q, history:_hist}) });
+    const reader=resp.body.getReader(); const dec=new TextDecoder(); let buf='', ans='';
+    while(true){ const {done,value}=await reader.read(); if(done)break; buf+=dec.decode(value,{stream:true});
+      const lines=buf.split('\n'); buf=lines.pop();
+      for(const line of lines){ if(!line.startsWith('data: ')) continue;
+        let evt; try{ evt=JSON.parse(line.slice(6)); }catch{ continue; }
+        const s=$(`${bid}-s`), t=$(`${bid}-t`);
+        if(evt.type==='status'){ if(s) s.innerHTML='<div class="spin" style="width:.8rem;height:.8rem;border-width:2px"></div>'+esc(evt.data); }
+        else if(evt.type==='cypher'){ const cel=$(`${bid}-cy`); if(cel){ cel.classList.remove('hidden'); cel.innerHTML=`<details class="text-[11px]"><summary class="cursor-pointer text-blue-500 font-medium select-none">Show Cypher query</summary><pre class="mt-1 bg-slate-800 text-emerald-300 rounded-lg p-2 overflow-x-auto text-[10px] whitespace-pre-wrap">${esc(evt.data)}</pre></details>`; } }
+        else if(evt.type==='token'){ ans+=evt.data; if(t) t.innerHTML=_fmt(ans); msgs.scrollTop=msgs.scrollHeight; }
+        else if(evt.type==='subgraph'){ try{ const sg=JSON.parse(evt.data); if(sg.nodes?.length){ cy.resize(); renderGraph(cy,sg,'rag'); document.querySelectorAll('#view-seg button').forEach(b=>b.classList.remove('active')); const rv=$('reset-view'); if(rv) rv.classList.remove('hidden'); } }catch{} }
+        else if(evt.type==='done'){ if(s) s.remove(); _hist.push({role:'assistant',content:ans}); }
+      }
+    }
+  }catch(e){ const t=$(`${bid}-t`); if(t) t.textContent='⚠️ '+e.message; }
+}
+
+// ── View: Library ────────────────────────────────────────────────
+let _lib = {};
+function _catOf(l){ return l==='ConnectionType'?'ConnectionType':l==='Agent'?'Agent':l==='Tool'?'Tool':(l==='Skill'||l==='DisassemblySkill'||l==='AssemblySkill')?'Skill':null; }
+
+async function renderLibrary(){
+  $('main').innerHTML = `${pageHeader({ title:'Library', subtitle:'Shared taxonomy — who can disassemble what, with which tools & skills' })}
+    <div class="h-[calc(100%-81px)] flex gap-4 p-6 min-h-0">
+      <div class="w-80 flex-none flex flex-col min-h-0 gap-3">
+        <div id="lib-cards" class="grid grid-cols-2 gap-2"></div>
+        <div class="kg-card flex-1 min-h-0 flex flex-col overflow-hidden">
+          <div class="px-3 py-2 border-b border-slate-100 flex items-center justify-between">
+            <span id="lib-items-title" class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Items</span>
+            ${DEMO ? '' : `<button onclick="_libOpenForm()" class="text-[11px] font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-0.5"><i data-lucide="plus" class="w-3.5 h-3.5"></i> Add</button>`}
+          </div>
+          <div id="lib-items" class="flex-1 overflow-y-auto p-1.5"><div class="text-slate-400 text-sm p-3">Loading…</div></div>
+        </div>
+      </div>
+      <div class="kg-card flex-1 min-w-0 relative overflow-hidden">
+        <div id="cy"></div>
+        <div id="lib-detail" class="hidden absolute top-3 right-3 w-64 kg-card p-4 z-10 fade-in" style="max-height:calc(100% - 24px);overflow-y:auto">
+          <button onclick="$('lib-detail').classList.add('hidden')" class="absolute top-2.5 right-2.5 text-slate-300 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+          <div id="lib-nd-body"></div>
+        </div>
+      </div>
+    </div>`;
+  lucide.createIcons();
+  const lcy = cytoscape({ container: $('cy'), style: cyStyle(), wheelSensitivity:0.3 });
+  const g = await (await fetch(API.libraryGraph())).json().catch(()=>({nodes:[],edges:[]}));
+  lcy.resize(); renderGraph(lcy, g, 'library');
+  lcy.on('tap','node', e=>_libFocus(e.target.id()));
+  lcy.on('tap','edge', e=>{ showEdgeDetail(e.target, 'lib-nd-body', 'lib-detail'); });
+  lcy.on('tap', e=>{ if(e.target===lcy){ clearHighlight(lcy); $('lib-detail').classList.add('hidden'); } });
+  initGraphTooltips(lcy);
+
+  const byCat = { Agent:[], Tool:[], Skill:[], ConnectionType:[] };
+  for (const n of (g.nodes||[])){
+    const cat = _catOf(primaryLabel(n.labels||[]));
+    if (cat && byCat[cat]) byCat[cat].push({ id:n.id, display:n.display||n.properties?.name||'', properties:n.properties||{} });
+  }
+  _lib = { cy:lcy, byCat, cat: _lib.cat };  // keep the selected category across refreshes
+  const meta = [['Agent','Agents','user','#16A34A'],['Tool','Tools','hammer','#0D9488'],
+                ['Skill','Skills','wrench','#06B6D4'],['ConnectionType','Connection Types','cable','#0E6B7A']];
+  $('lib-cards').innerHTML = meta.map(([cat,label,ic,col])=>`<div class="lib-card kg-card click p-3 cursor-pointer rounded-xl" data-cat="${cat}" onclick="_libSelectCat('${cat}')">
+      <div class="flex items-center justify-between"><i data-lucide="${ic}" class="w-4 h-4" style="color:${col}"></i><span class="text-lg font-bold text-slate-800">${byCat[cat].length}</span></div>
+      <div class="text-[11px] font-medium text-slate-500 mt-1">${label}</div></div>`).join('');
+  lucide.createIcons();
+  _libSelectCat(_lib.cat || 'Agent');
+}
+
+function _libSelectCat(cat){
+  if (!_lib.byCat) return;
+  _lib.cat = cat;
+  document.querySelectorAll('#lib-cards .lib-card').forEach(c=>{ const on=c.dataset.cat===cat;
+    c.classList.toggle('ring-2',on); c.classList.toggle('ring-blue-400',on); });
+  const titles = { Agent:'Agents', Tool:'Tools', Skill:'Disassembly Skills', ConnectionType:'Connection Types' };
+  $('lib-items-title').textContent = `${titles[cat]||'Items'} (${_lib.byCat[cat].length})`;
+  const nodes = _lib.byCat[cat].slice().sort((a,b)=>String(a.display).localeCompare(String(b.display)));
+  $('lib-items').innerHTML = nodes.map(n=>{ const p=n.properties||{};
+    const sub = p.description || p.destructiveness || p.agentType || p.toolType || '';
+    const actions = DEMO ? '' : `<span class="lib-actions hidden shrink-0 flex items-center gap-1">
+        <button onclick="event.stopPropagation();_libOpenForm('${esc(p.id)}')" class="text-slate-300 hover:text-blue-600" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+        <button onclick="event.stopPropagation();_libDelete('${esc(p.id)}')" class="text-slate-300 hover:text-red-500" title="Delete"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+      </span>`;
+    return `<div class="group px-2.5 py-2 rounded-lg hover:bg-slate-50 cursor-pointer flex items-start justify-between gap-2" onclick="_libFocus('${n.id}')"
+                 onmouseenter="this.querySelector('.lib-actions')?.classList.remove('hidden')" onmouseleave="this.querySelector('.lib-actions')?.classList.add('hidden')">
+      <div class="min-w-0"><div class="text-sm font-medium text-slate-800 truncate">${esc(n.display)}</div>${sub?`<div class="text-[11px] text-slate-400 leading-snug">${esc(sub)}</div>`:''}</div>
+      ${actions}</div>`;
+  }).join('') || '<div class="text-xs text-slate-400 p-3">No items.</div>';
+  lucide.createIcons();
+  const lcy = _lib.cy; if (!lcy) return;
+  lcy.batch(()=>{ lcy.elements().addClass('kg-search-dim');
+    lcy.nodes().forEach(nd=>{ if(_catOf(nd.data('label'))===cat){ nd.removeClass('kg-search-dim'); nd.neighborhood().removeClass('kg-search-dim'); } }); });
+  $('lib-detail').classList.add('hidden');
+}
+
+function _libFocus(id){
+  const lcy=_lib.cy; if(!lcy) return; const n=lcy.getElementById(id); if(!n||!n.length) return;
+  highlightNeighborhood(lcy, n); lcy.animate({ center:{eles:n}, zoom:1.5 }, { duration:300 }); _libShowDetail(n);
+}
+
+function _libShowDetail(n){
+  const d=n.data(); const type=d.label; const c=(LABEL_COLORS[type]&&LABEL_COLORS[type].bg)||'#64748b'; const props=d.properties||{};
+  const rows=Object.entries(props).filter(([k])=>!['id','name'].includes(k)).map(([k,v])=>{ const m=PROP_META[k]||{};
+    return `<div class="flex justify-between gap-3 py-0.5 text-xs"><span class="text-slate-400 shrink-0">${esc(m.label||k)}</span><span class="font-medium text-slate-700 text-right break-words">${esc(m.fmt?m.fmt(v):v)}</span></div>`; }).join('');
+  const edgeCount=n.connectedEdges().length;
+  const nbr=_edgeRows(n, 16);
+  $('lib-nd-body').innerHTML=`<span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded" style="background:${c}1f;color:${c}">${esc(type)}</span>
+    <h3 class="font-bold text-slate-900 text-sm mt-2 mb-2 break-words pr-4">${esc(d.full||d.display)}</h3>${rows}
+    <div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mt-3 mb-1">Related (${edgeCount})</div>
+    <div class="max-h-44 overflow-y-auto -mr-1 pr-1">${nbr}</div>`;
+  $('lib-detail').classList.remove('hidden'); lucide.createIcons();
+}
+
+// ── Library editor (normal mode only — server rejects writes in demo) ───────
+// Field definitions per category.
+const LIB_FORMS = {
+  Agent: { prefix:'Agent_', fields:[
+    {k:'name', label:'Name', type:'text', req:true},
+    {k:'agentType', label:'Agent type', type:'select', options:['Human','Robot','AutomatedStation'], def:'Human'},
+    {k:'description', label:'Description', type:'text'},
+    {k:'labor_rate_eur_h', label:'Labor rate (€/h)', type:'number'},
+  ]},
+  Tool: { prefix:'Tool_', fields:[
+    {k:'name', label:'Name', type:'text', req:true},
+    {k:'toolType', label:'Tool type', type:'select', options:['HandTool','PowerTool'], def:'HandTool'},
+    {k:'description', label:'Description', type:'text'},
+    {k:'cost_eur', label:'Cost (€)', type:'number'},
+  ]},
+  Skill: { prefix:'Skill_', fields:[
+    {k:'name', label:'Name', type:'text', req:true},
+  ], fixed:{type:'DisassemblySkill'}},
+  ConnectionType: { prefix:'CT_', fields:[
+    {k:'name', label:'Name', type:'text', req:true},
+    {k:'destructiveness', label:'Destructiveness', type:'select',
+     options:['Non-destructive','Semi-destructive','Destructive'], def:'Non-destructive'},
+  ]},
+};
+
+function _libItem(itemId){
+  for (const arr of Object.values(_lib.byCat||{})){
+    const hit = arr.find(n => (n.properties||{}).id === itemId);
+    if (hit) return hit;
+  }
+  return null;
+}
+
+function _libSlug(name, prefix){
+  const pas = String(name||'').replace(/[^a-zA-Z0-9 ]/g,'').split(/\s+/)
+    .filter(Boolean).map(w=>w[0].toUpperCase()+w.slice(1)).join('');
+  return pas ? prefix + pas : '';
+}
+
+function _libOpenForm(itemId){
+  if (DEMO){ toast('Read-only demo — the library cannot be edited.'); return; }
+  const cat = _lib.cat || 'Agent';
+  const spec = LIB_FORMS[cat]; if (!spec) return;
+  const item = itemId ? _libItem(itemId) : null;
+  const p = item ? (item.properties||{}) : {};
+  const isNew = !item;
+
+  const fieldRows = spec.fields.map(f=>{
+    const val = p[f.k] ?? f.def ?? '';
+    if (f.type==='select'){
+      return `<label class="block mb-2"><span class="text-[11px] font-medium text-slate-500">${esc(f.label)}</span>
+        <select data-k="${f.k}" class="lib-f mt-0.5 w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm">
+          ${f.options.map(o=>`<option ${o===val?'selected':''}>${esc(o)}</option>`).join('')}</select></label>`;
+    }
+    return `<label class="block mb-2"><span class="text-[11px] font-medium text-slate-500">${esc(f.label)}${f.req?' *':''}</span>
+      <input data-k="${f.k}" data-type="${f.type}" value="${esc(val)}" ${f.k==='name'?'oninput="_libSyncId(this)"':''}
+             class="lib-f mt-0.5 w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm"></label>`;
+  }).join('');
+
+  const overlay = document.createElement('div');
+  overlay.id = 'lib-form-overlay';
+  overlay.className = 'fixed inset-0 bg-slate-900/40 z-40 flex items-center justify-center p-6';
+  overlay.innerHTML = `<div class="kg-card w-[380px] max-h-full overflow-y-auto p-5" onclick="event.stopPropagation()">
+      <h3 class="font-bold text-slate-900 mb-3">${isNew?'Add':'Edit'} ${esc(cat)}</h3>
+      ${fieldRows}
+      <label class="block mb-2"><span class="text-[11px] font-medium text-slate-500">ID ${isNew?'(auto)':''}</span>
+        <input id="lib-f-id" value="${esc(p.id||'')}" ${isNew?'':'readonly'} data-prefix="${spec.prefix}"
+               class="mt-0.5 w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm ${isNew?'':'bg-slate-50 text-slate-400'}"></label>
+      <div class="flex justify-end gap-2 mt-4">
+        <button onclick="document.getElementById('lib-form-overlay').remove()" class="btn btn-ghost text-sm">Cancel</button>
+        <button onclick="_libSave('${esc(cat)}', ${isNew})" class="btn btn-primary text-sm">Save</button>
+      </div></div>`;
+  overlay.addEventListener('click', ()=>overlay.remove());
+  document.body.appendChild(overlay);
+  lucide.createIcons();
+}
+
+function _libSyncId(nameInput){
+  const idEl = $('lib-f-id');
+  if (idEl && !idEl.readOnly) idEl.value = _libSlug(nameInput.value, idEl.dataset.prefix);
+}
+
+async function _libSave(cat, isNew){
+  const spec = LIB_FORMS[cat];
+  const overlay = $('lib-form-overlay'); if (!overlay) return;
+  const item = Object.assign({}, spec.fixed || {});
+  let missing = false;
+  overlay.querySelectorAll('.lib-f').forEach(el=>{
+    const k = el.dataset.k; let v = el.value.trim();
+    const fspec = spec.fields.find(f=>f.k===k);
+    if (fspec?.req && !v) missing = true;
+    if (!v) return;
+    if (el.dataset.type==='number'){ const n = Number(v); if (!Number.isNaN(n)) v = n; }
+    item[k] = v;
+  });
+  item.id = $('lib-f-id')?.value.trim();
+  if (missing || !item.id){ toast('Name is required.'); return; }
+  if (isNew && _libItem(item.id)){ toast(`ID ${item.id} already exists.`); return; }
+  try {
+    const resp = await fetch(API.libraryItems ? API.libraryItems(cat) : `/api/library/items/${cat}`,
+      { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify([item]) });
+    if (!resp.ok){ const d = await resp.json().catch(()=>({})); toast(d.error || `Save failed (HTTP ${resp.status})`); return; }
+    overlay.remove(); toast(`${item.name || item.id} saved.`);
+    await renderLibrary();
+  } catch(e){ toast('Save failed: '+e.message); }
+}
+
+async function _libDelete(itemId){
+  if (DEMO){ toast('Read-only demo — the library cannot be edited.'); return; }
+  const cat = _lib.cat || 'Agent';
+  const item = _libItem(itemId);
+  const name = item ? item.display : itemId;
+  if (!confirmTwice('library:' + itemId, `Click delete again to remove "${name}" from the shared library — tasks that reference it lose that assignment.`)) return;
+  try {
+    const resp = await fetch(`/api/library/items/${cat}/${encodeURIComponent(itemId)}`, { method:'DELETE' });
+    if (!resp.ok){ const d = await resp.json().catch(()=>({})); toast(d.error || `Delete failed (HTTP ${resp.status})`); return; }
+    toast(`${name} deleted.`);
+    await renderLibrary();
+  } catch(e){ toast('Delete failed: '+e.message); }
+}
+
+// ── New product: Pipeline Studio lives in /static/js/studio.js ──
+
+// ── Boot ─────────────────────────────────────────────────────────
+(async()=>{
+  try{ const c=await (await fetch(API.config())).json(); DEMO=!!c.demo_mode; if(DEMO){ document.body.classList.add('demo'); $('demo-badge')?.classList.remove('hidden'); document.querySelectorAll('.demo-hide').forEach(e=>e.classList.add('hidden')); } }catch{}
+  try{ const s=await (await fetch('/api/chat/starters')).json(); if(s.starters?.length) _STARTERS=s.starters.map(x=>x.q); }catch{}
+  route();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,410 @@
+[
+ {
+  "id": "P01",
+  "category": "Product structure",
+  "question": "What components are in this product?",
+  "note": "",
+  "cyphers": [
+   "MATCH (p:Product {id: 'Prod_CentrifugalPump_V15'})-[:CONSISTS_OF]->(root:Assembly {product_id: 'Prod_CentrifugalPump_V15'})-[:CONSISTS_OF]->(c:Component {product_id: 'Prod_CentrifugalPump_V15'})\nRETURN p.name AS product, c.partId AS partId, c.name AS component\nORDER BY c.partId"
+  ],
+  "rows": 25,
+  "answer": "The **Centrifugal Pump V15** contains these components:\n\n- **A** \u2014 Volute Casing Cover\n- **B** \u2014 Stuffing Box Gland Half_1\n- **C** \u2014 Bearing Housing\n- **D** \u2014 Bearing End Cap 1\n- **E** \u2014 M20x2.5 Hex Bolt_1\n- **F** \u2014 Shaft\n- **G** \u2014 Bearing End Cap 2\n- **H** \u2014 Coupling\n- **I** \u2014 Impeller\n- **J** \u2014 M20x2.5 Hex Bolt_2\n- **K** \u2014 Bearing 59x70\n- **L** \u2014 M12 Flange Bolt_1\n- **M** \u2014 Stuffing Box Gland Half_2\n- **N** \u2014 M20 Cap Nut\n- **O** \u2014 M12 Flange Bolt_2\n- **P** \u2014 Suction Nozzle\n- **Q** \u2014 M20x2.5 Hex Bolt_3\n- **R** \u2014 M12 Flange Bolt_3\n- **S** \u2014 M20x2.5 Hex Bolt_4\n- **T** \u2014 Volute Casing\n- **U** \u2014 Volute Casing Gasket\n- **V** \u2014 M12 Flange Bolt_4\n- **W** \u2014 Bearing 40x50\n- **X** \u2014 M20x2.5 Hex Bolt_5\n- **Y** \u2014 M20x2.5 Hex Bolt_6**",
+  "error": null,
+  "duration_s": 5.9,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P02",
+  "category": "Product structure",
+  "question": "How many components does the product have?",
+  "note": "",
+  "cyphers": [
+   "MATCH (p:Product {id: 'Prod_CentrifugalPump_V15'})-[:CONSISTS_OF]->(root:Assembly {product_id: 'Prod_CentrifugalPump_V15'})\nMATCH (root)-[:CONSISTS_OF]->(c:Component {product_id: 'Prod_CentrifugalPump_V15'})\nRETURN count(DISTINCT c) AS componentCount"
+  ],
+  "rows": 1,
+  "answer": "The product has **25 components**.",
+  "error": null,
+  "duration_s": 4.1,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P03",
+  "category": "Product structure",
+  "question": "Which parts are fasteners?",
+  "note": "",
+  "cyphers": [
+   "MATCH (f:Fastener {product_id: 'Prod_CentrifugalPump_V15'})\nRETURN f.partId AS partId, f.name AS fastener\nORDER BY partId"
+  ],
+  "rows": 10,
+  "answer": "The fasteners are:\n\n- **E** \u2014 M20x2.5 Hex Bolt_1\n- **J** \u2014 M20x2.5 Hex Bolt_2\n- **L** \u2014 M12 Flange Bolt_1\n- **O** \u2014 M12 Flange Bolt_2\n- **Q** \u2014 M20x2.5 Hex Bolt_3\n- **R** \u2014 M12 Flange Bolt_3\n- **S** \u2014 M20x2.5 Hex Bolt_4\n- **V** \u2014 M12 Flange Bolt_4\n- **X** \u2014 M20x2.5 Hex Bolt_5\n- **Y** \u2014 M20x2.5 Hex Bolt_6",
+  "error": null,
+  "duration_s": 4.2,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P04",
+  "category": "Product structure",
+  "question": "What is the root assembly of this product?",
+  "note": "",
+  "cyphers": [
+   "MATCH (p:Product {id: 'Prod_CentrifugalPump_V15'})-[:CONSISTS_OF]->(root:Assembly {product_id: 'Prod_CentrifugalPump_V15', isRoot: true})\nRETURN p.name AS product, root.id AS rootAssemblyId, root.name AS rootAssembly"
+  ],
+  "rows": 1,
+  "answer": "The root assembly of the **Centrifugal Pump V15** is **ABCDEFGHIJKLMNOPQRSTUVWXY** (ID: `Asm_ABCDEFGHIJKLMNOPQRSTUVWXY`).",
+  "error": null,
+  "duration_s": 5.0,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P05",
+  "category": "Product structure",
+  "question": "What is the part id of the Impeller?",
+  "note": "",
+  "cyphers": [
+   "MATCH (c:Component {product_id: 'Prod_CentrifugalPump_V15'})\nWHERE toLower(c.name) CONTAINS 'impeller'\nRETURN c.partId AS partId, c.name AS component"
+  ],
+  "rows": 1,
+  "answer": "The Impeller\u2019s part ID is **I**.",
+  "error": null,
+  "duration_s": 3.9,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P06",
+  "category": "Connections",
+  "question": "What connection types are used in this product?",
+  "note": "",
+  "cyphers": [
+   "MATCH (conn:Connection {product_id: 'Prod_CentrifugalPump_V15'})-[:OF_TYPE]->(ct:ConnectionType)\nRETURN DISTINCT ct.id AS connectionTypeId, ct.name AS connectionType\nORDER BY connectionType"
+  ],
+  "rows": 3,
+  "answer": "The product uses these connection types:\n\n- Loose Fit\n- Press Fit\n- Screw Joint",
+  "error": null,
+  "duration_s": 3.6,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P07",
+  "category": "Connections",
+  "question": "How many connections does this product have?",
+  "note": "",
+  "cyphers": [
+   "MATCH (conn:Connection {product_id: 'Prod_CentrifugalPump_V15'})\nRETURN count(DISTINCT conn) AS connectionCount"
+  ],
+  "rows": 1,
+  "answer": "The product has 40 connections.",
+  "error": null,
+  "duration_s": 3.1,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P08",
+  "category": "Connections",
+  "question": "Which connections are press-fit?",
+  "note": "",
+  "cyphers": [
+   "MATCH (conn:Connection {product_id: 'Prod_CentrifugalPump_V15'})-[:OF_TYPE]->(ct:ConnectionType {id: 'CT_PressFit'})\nMATCH (conn)-[:CONNECTS]->(component:Component {product_id: 'Prod_CentrifugalPump_V15'})\nWITH conn, ct, collect(component.name) AS connectedParts\nRETURN conn.id AS connectionId, conn.name AS connection,\n       ct.name AS connectionType, connectedParts\nORDER BY connectionId"
+  ],
+  "rows": 7,
+  "answer": "The following connections are **Press Fit**:\n\n- Bearing Housing \u2194 Bearing End Cap 1 (Conn_CD)\n- Bearing Housing \u2194 Bearing End Cap 2 (Conn_CG)\n- Bearing Housing \u2194 Bearing 59x70 (Conn_CK)\n- Bearing Housing \u2194 Bearing 40x50 (Conn_CW)\n- Shaft \u2194 Coupling (Conn_FH)\n- Shaft \u2194 Bearing 59x70 (Conn_FK)\n- Shaft \u2194 Bearing 40x50 (Conn_FW)",
+  "error": null,
+  "duration_s": 4.8,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P09",
+  "category": "Connections",
+  "question": "Which fastener mediates the connection between the Volute Casing, the Volute Casing Gasket and the Volute Casing Cover?",
+  "note": "the three-part joint: cover, casing and gasket clamped by one bolt group",
+  "cyphers": [
+   "MATCH (f:Fastener {product_id: 'Prod_CentrifugalPump_V15'})<-[:USES_FASTENER]-(:Connection {product_id: 'Prod_CentrifugalPump_V15'})-[:CONNECTS]->(p:Component {product_id: 'Prod_CentrifugalPump_V15'})\nWITH f, collect(DISTINCT toLower(p.name)) AS names\nWHERE all(t IN ['volute casing', 'volute casing gasket', 'volute casing cover'] WHERE t IN names)\nRETURN f.partId AS partId, f.name AS fastener, names"
+  ],
+  "rows": 6,
+  "answer": "The connection is mediated by six fasteners: **M20x2.5 Hex Bolt_1 (part E), M20x2.5 Hex Bolt_2 (part J), M20x2.5 Hex Bolt_3 (part Q), M20x2.5 Hex Bolt_4 (part S), M20x2.5 Hex Bolt_5 (part X), and M20x2.5 Hex Bolt_6 (part Y).**",
+  "error": null,
+  "duration_s": 4.3,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P10",
+  "category": "Connections",
+  "question": "Which parts does the M20 Cap Nut connect?",
+  "note": "the cap nut is a part with two connections: to the Shaft (Screw Joint) and to the Impeller (Loose Fit)",
+  "cyphers": [
+   "MATCH (f:Fastener {product_id: 'Prod_CentrifugalPump_V15'})\nWHERE toLower(f.name) CONTAINS 'm20 cap nut'\nMATCH (conn:Connection {product_id: 'Prod_CentrifugalPump_V15'})-[:USES_FASTENER]->(f)\nMATCH (conn)-[:CONNECTS]->(part:Component {product_id: 'Prod_CentrifugalPump_V15'})\nWITH f, conn, collect(DISTINCT part.name) AS connectedParts\nRETURN f.name AS fastener, conn.id AS connectionId, connectedParts\nORDER BY connectionId"
+  ],
+  "rows": 0,
+  "answer": "I could not find relevant information in the Knowledge Graph to answer your question. Please try rephrasing or ask about components, connections, assembly/disassembly sequences, tasks, tools, or agents defined in this product.",
+  "error": null,
+  "duration_s": 3.5,
+  "pass": false,
+  "failures": [
+   "answer missing all of ['Impeller']",
+   "answer missing all of ['Shaft']"
+  ]
+ },
+ {
+  "id": "P11",
+  "category": "Fasteners and tools",
+  "question": "Which fastener holds the Suction Nozzle and the Volute Casing Cover together?",
+  "note": "",
+  "cyphers": [
+   "MATCH (f:Fastener {product_id: 'Prod_CentrifugalPump_V15'})<-[:USES_FASTENER]-(:Connection {product_id: 'Prod_CentrifugalPump_V15'})-[:CONNECTS]->(p:Component {product_id: 'Prod_CentrifugalPump_V15'})\nWITH f, collect(DISTINCT toLower(p.name)) AS names\nWHERE all(t IN ['suction nozzle', 'volute casing cover'] WHERE t IN names)\nRETURN f.partId AS partId, f.name AS fastener, names"
+  ],
+  "rows": 4,
+  "answer": "The Suction Nozzle and Volute Casing Cover are held together by four fasteners:\n\n- M12 Flange Bolt_1 (part L)\n- M12 Flange Bolt_2 (part O)\n- M12 Flange Bolt_3 (part R)\n- M12 Flange Bolt_4 (part V)",
+  "error": null,
+  "duration_s": 4.8,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P12",
+  "category": "Fasteners and tools",
+  "question": "Which tools are used for the unscrewing tasks?",
+  "note": "GT: MATCH (t:DisassemblyTask {product_id:'Prod_CentrifugalPump'})-[:REQUIRES]->(:Skill {id:'Skill_Unscrewing'}) MATCH (t)-[:USES_TOOL]->(tool) RETURN tool.name, count(t) -> Combination Wrench (18mm) for the M12 flange bolts (1 task), Combination Wrench (30mm) for the M20 hex bolts and the M20 cap nut (2 tasks).",
+  "cyphers": [
+   "MATCH (f:Fastener {product_id: 'Prod_CentrifugalPump_V15'})<-[:USES_FASTENER]-(conn:Connection {product_id: 'Prod_CentrifugalPump_V15'})<-[:ACTS_ON]-(task:DisassemblyTask {product_id: 'Prod_CentrifugalPump_V15'})\nMATCH (task)-[:USES_TOOL]->(tool:Tool)\nWHERE toLower(task.name) CONTAINS 'unscrew'\nRETURN DISTINCT task.name AS task, f.name AS fastener, tool.name AS tool\nORDER BY task, fastener, tool"
+  ],
+  "rows": 10,
+  "answer": "The unscrewing tasks use these tools:\n\n- **Unscrew 4x M12 Flange Bolt:** Combination Wrench (18mm)\n- **Unscrew 6x M20x2.5 Hex Bolt:** Combination Wrench (30mm)",
+  "error": null,
+  "duration_s": 5.3,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P13",
+  "category": "Disassembly sequences",
+  "question": "What is the first step to disassemble this product?",
+  "note": "must anchor on the root assembly, not ORDER BY id; naming one of the four valid first steps (cap nut, M12 flange bolts, M20 hex bolts, coupling) is a correct answer",
+  "cyphers": [
+   "MATCH (trans:Transition {product_id: 'Prod_CentrifugalPump_V15'})-[:TRANSFORMS]->(root:Assembly {product_id: 'Prod_CentrifugalPump_V15', isRoot: true})\nMATCH (trans)-[:RESULTS_IN]->(output)\nOPTIONAL MATCH (trans)-[:DISASSEMBLED_BY]->(task:DisassemblyTask {product_id: 'Prod_CentrifugalPump_V15'})\nOPTIONAL MATCH (task)-[:PERFORMED_BY]->(agent:Agent)\nOPTIONAL MATCH (task)-[:USES_TOOL]->(tool:Tool)\nRETURN trans.id AS transition, root.id AS fromAssembly, task.name AS task,\n       agent.name AS agent, tool.name AS tool,\n       collect(DISTINCT coalesce(output.name, output.id)) AS results\nORDER BY transition"
+  ],
+  "rows": 5,
+  "answer": "The first step is to **unscrew the four M12 flange bolts** using a **Combination Wrench (18mm)**. The task is performed by a **Human** agent.",
+  "error": null,
+  "duration_s": 4.7,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P14",
+  "category": "Disassembly sequences",
+  "question": "How many alternative first disassembly steps are there from the full assembly?",
+  "note": "",
+  "cyphers": [
+   "MATCH (trans:Transition {product_id: 'Prod_CentrifugalPump_V15'})-[:TRANSFORMS]->(root:Assembly {product_id: 'Prod_CentrifugalPump_V15', isRoot: true})\nRETURN count(DISTINCT trans) AS alternativeFirstDisassemblySteps"
+  ],
+  "rows": 1,
+  "answer": "There are 4 alternative first disassembly steps from the full assembly.",
+  "error": null,
+  "duration_s": 4.0,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P15",
+  "category": "Disassembly sequences",
+  "question": "How do I remove the Impeller?",
+  "note": "",
+  "cyphers": [
+   "MATCH p = (root:Assembly {product_id: 'Prod_CentrifugalPump_V15', isRoot: true})\n      (()<-[:TRANSFORMS]-(:Transition {product_id: 'Prod_CentrifugalPump_V15'})-[:RESULTS_IN]->()){0,24}\n      (a:Assembly {product_id: 'Prod_CentrifugalPump_V15'})<-[:TRANSFORMS]-(t:Transition {product_id: 'Prod_CentrifugalPump_V15'})-[:RESULTS_IN]->(target:Component {product_id: 'Prod_CentrifugalPump_V15'})\nWHERE toLower(target.name) CONTAINS 'impeller'\nWITH p LIMIT 1\nUNWIND [n IN nodes(p) WHERE n:Transition] AS trans\nWITH DISTINCT trans\nMATCH (trans)-[:TRANSFORMS]->(inputAsm:Assembly {product_id: 'Prod_CentrifugalPump_V15'})\nMATCH (trans)-[:RESULTS_IN]->(output)\nOPTIONAL MATCH (trans)-[:DISASSEMBLED_BY]->(task:DisassemblyTask {product_id: 'Prod_CentrifugalPump_V15'})\nOPTIONAL MATCH (task)-[:REQUIRES]->(skill:Skill)\nOPTIONAL MATCH (task)-[:PERFORMED_BY]->(agent:Agent)\nOPTIONAL MATCH (task)-[:USES_TOOL]->(tool:Tool)\nRETURN trans.id AS transition, inputAsm.id AS fromAssembly,\n       task.name AS task, skill.name AS skill, agent.name AS agent,\n       tool.name AS tool,\n       collect(DISTINCT CASE WHEN output:Component THEN output.name ELSE output.id END) AS results\nORDER BY size(inputAsm.id) DESC"
+  ],
+  "rows": 6,
+  "answer": "The Knowledge Graph shows this sequence to reach the Impeller. The two entries for transition **T336** are both listed in the data; it does not specify whether they are alternatives or whether both tasks are required.\n\n1. **T337 \u2014 Unscrew 4\u00d7 M12 Flange Bolt**\n   - Skill: Unscrewing\n   - Agent: Human Worker (**Human**)\n   - Tool: Combination Wrench (18mm)\n   - Results include the four M12 Flange Bolts, the Suction Nozzle, and assembly `Asm_ABCDEFGHIJKMNQSTUWXY`.\n\n2. **T336 \u2014 Unscrew M20 Cap Nut**\n   - Skill: Unscrewing\n   - Agent: Human Worker (**Human**)\n   - Tool: Combination Wrench (30mm)\n   - Results: M20 Cap Nut and assembly `Asm_ABCDEFGHIJKMQSTUWXY`.\n\n3. **T336 \u2014 Pick M20 Cap Nut**\n   - Skill: Picking\n   - Agent: Human Worker (**Human**)\n   - Tool: No Tool (Manual)\n   - Results: M20 Cap Nut and assembly `Asm_ABCDEFGHIJKMQSTUWXY`.\n\n4. **T323 \u2014 Pull Off Coupling**\n   - Skill: Pulling Off\n   - Agent: Human Worker (**Human**)\n   - Tool: Pull-Off Tool\n   - Results: Coupling and assembly `Asm_ABCDEFGIJKMQSTUWXY`.\n\n5. **T276 \u2014 Unscrew 6\u00d7 M20x2.5 Hex Bolt**\n   - Skill: Unscrewing\n   - Agent: Human Worker (**Human**)\n   - Tool: Combination Wrench (30mm)\n   - Results include the Volute Casing Cover, Volute Casing Gasket, six M20x2.5 Hex Bolts, and assembly `Asm_BCDFGIKMTW`.\n\n6. **T203 \u2014 Pick Impeller**\n   - Skill: Picking\n   - Agent: Human Worker (**Human**)\n   - Tool: No Tool (Manual)\n   - Results: Impeller and assembly `Asm_BCDFGKMTW`.\n\nThe raw data does not provide a separate connection type.",
+  "error": null,
+  "duration_s": 12.3,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P15b",
+  "category": "Disassembly sequences",
+  "question": "How do I remove the Shaft?",
+  "note": "the Shaft cannot be removed in the first step, so the answer has to give the chain of preceding steps from the complete pump",
+  "cyphers": [
+   "MATCH p = (root:Assembly {product_id: 'Prod_CentrifugalPump_V15', isRoot: true})\n      (()<-[:TRANSFORMS]-(:Transition {product_id: 'Prod_CentrifugalPump_V15'})-[:RESULTS_IN]->()){0,24}\n      (a:Assembly {product_id: 'Prod_CentrifugalPump_V15'})<-[:TRANSFORMS]-(t:Transition {product_id: 'Prod_CentrifugalPump_V15'})-[:RESULTS_IN]->(target:Component {product_id: 'Prod_CentrifugalPump_V15'})\nWHERE toLower(target.name) CONTAINS 'shaft'\nWITH p LIMIT 1\nUNWIND [n IN nodes(p) WHERE n:Transition] AS trans\nWITH DISTINCT trans\nMATCH (trans)-[:TRANSFORMS]->(inputAsm:Assembly {product_id: 'Prod_CentrifugalPump_V15'})\nMATCH (trans)-[:RESULTS_IN]->(output)\nOPTIONAL MATCH (trans)-[:DISASSEMBLED_BY]->(task:DisassemblyTask {product_id: 'Prod_CentrifugalPump_V15'})\nOPTIONAL MATCH (task)-[:REQUIRES]->(skill:Skill)\nOPTIONAL MATCH (task)-[:PERFORMED_BY]->(agent:Agent)\nOPTIONAL MATCH (task)-[:USES_TOOL]->(tool:Tool)\nRETURN trans.id AS transition, inputAsm.id AS fromAssembly,\n       task.name AS task, skill.name AS skill, agent.name AS agent,\n       tool.name AS tool,\n       collect(DISTINCT CASE WHEN output:Component THEN output.name ELSE output.id END) AS results\nORDER BY size(inputAsm.id) DESC"
+  ],
+  "rows": 14,
+  "answer": "The Knowledge Graph gives this sequence to reach the transition that frees the **Shaft**. The agent is listed as **Human Worker**; an agent type is not specified in the data. Where multiple tasks are listed for one transition, they are entries for the same transition, not additional sequence steps.\n\n1. **Transition T340 \u2014 Asm_ABCDEFGHIJKLMNOPQRSTUVWXY**\n   - Task: Pull Off Coupling\n   - Skill: Pulling Off\n   - Agent: Human Worker (type not specified)\n   - Tool: Pull-Off Tool\n   - Results: Coupling and **Asm_ABCDEFGIJKLMNOPQRSTUVWXY**\n\n2. **Transition T331 \u2014 Asm_ABCDEFGIJKLMNOPQRSTUVWXY**\n   - Listed task entries:\n     - Pull Off Bearing End Cap 1 \u2014 skill: Pulling Off; tool: Pull-Off Tool\n     - Pick Bearing End Cap 1 \u2014 skill: Picking; tool: No Tool (Manual)\n   - Agent for both: Human Worker (type not specified)\n   - Results: Bearing End Cap 1 and **Asm_ABCEFGIJKLMNOPQRSTUVWXY**\n\n3. **Transition T317 \u2014 Asm_ABCEFGIJKLMNOPQRSTUVWXY**\n   - Task: Unscrew 4x M12 Flange Bolt\n   - Skill: Unscrewing\n   - Agent: Human Worker (type not specified)\n   - Tool: Combination Wrench (18mm)\n   - Results: four M12 Flange Bolts, Suction Nozzle, and **Asm_ABCEFGIJKMNQSTUWXY**\n\n4. **Transition T299 \u2014 Asm_ABCEFGIJKMNQSTUWXY**\n   - Listed task entries:\n     - Pick M20 Cap Nut \u2014 skill: Picking; tool: No Tool (Manual)\n     - Unscrew M20 Cap Nut \u2014 skill: Unscrewing; tool: Combination Wrench (30mm)\n   - Agent for both: Human Worker (type not specified)\n   - Results: M20 Cap Nut and **Asm_ABCEFGIJKMQSTUWXY**\n\n5. **Transition T264 \u2014 Asm_ABCEFGIJKMQSTUWXY**\n   - Task: Unscrew 6x M20x2.5 Hex Bolt\n   - Skill: Unscrewing\n   - Agent: Human Worker (type not specified)\n   - Tool: Combination Wrench (30mm)\n   - Results: six M20x2.5 Hex Bolts, Volute Casing Cover, Volute Casing Gasket, and **Asm_BCFGIKMTW**\n\n6. **Transition T193 \u2014 Asm_BCFGIKMTW**\n   - Task: Pick Impeller\n   - Skill: Picking\n   - Agent: Human Worker (type not specified)\n   - Tool: No Tool (Manual)\n   - Results: Impeller and **Asm_BCFGKMTW**\n\n7. **Transition T171 \u2014 Asm_BCFGKMTW**\n   - Listed task entries:\n     - Pull Off Bearing 40x50 \u2014 skill: Pulling Off; tool: Pull-Off Tool\n     - Pull Off Bearing Housing \u2014 skill: Pulling Off; tool: Pull-Off Tool\n   - Agent for both: Human Worker (type not specified)\n   - Results: Bearing 40x50 and **Asm_BCFGKMT**\n\n8. **Transition T143 \u2014 Asm_BCFGKMT**\n   - Listed task entries:\n     - Pick Stuffing Box Gland Half_2 \u2014 skill: Picking; tool: No Tool (Manual)\n     - Pick Bearing End Cap 2 \u2014 skill: Picking; tool: No Tool (Manual)\n     - Pull Off Bearing 59x70 \u2014 skill: Pulling Off; tool: Pull-Off Tool\n     - Pick Stuffing Box Gland Half_1 \u2014 skill: Picking; tool: No Tool (Manual)\n   - Agent for all: Human Worker (type not specified)\n   - Results: **Shaft** and **Asm_BCGKMT**",
+  "error": null,
+  "duration_s": 14.2,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P16",
+  "category": "Disassembly sequences",
+  "question": "Generate a complete disassembly sequence for this product.",
+  "note": "valid path from the root to single parts; no optimality claim",
+  "cyphers": [
+   "MATCH p = (root:Assembly {product_id: 'Prod_CentrifugalPump_V15', isRoot: true})\n      (()<-[:TRANSFORMS]-(t:Transition {product_id: 'Prod_CentrifugalPump_V15'} WHERE NOT EXISTS {\n          MATCH (t2:Transition {product_id: 'Prod_CentrifugalPump_V15'})-[:TRANSFORMS]->(a:Assembly {product_id: 'Prod_CentrifugalPump_V15'})<-[:TRANSFORMS]-(t)\n          WHERE ((toInteger(substring(t2.id, 1)) + 1387426911) * 2654435761) % 2147483648\n              < ((toInteger(substring(t.id, 1))  + 1387426911) * 2654435761) % 2147483648\n      })-[:RESULTS_IN]->()){1,24}\n      (x)\nUNWIND [n IN nodes(p) WHERE n:Transition] AS trans\nWITH DISTINCT trans\nMATCH (trans)-[:TRANSFORMS]->(inputAsm:Assembly {product_id: 'Prod_CentrifugalPump_V15'})\nMATCH (trans)-[:RESULTS_IN]->(output)\nOPTIONAL MATCH (trans)-[:DISASSEMBLED_BY]->(task:DisassemblyTask {product_id: 'Prod_CentrifugalPump_V15'})\nOPTIONAL MATCH (task)-[:REQUIRES]->(skill:Skill)\nOPTIONAL MATCH (task)-[:PERFORMED_BY]->(agent:Agent)\nOPTIONAL MATCH (task)-[:USES_TOOL]->(tool:Tool)\nRETURN trans.id AS transition, inputAsm.id AS fromAssembly,\n       task.name AS task, skill.name AS skill, agent.name AS agent,\n       tool.name AS tool,\n       collect(DISTINCT coalesce(output.name, output.id)) AS results\nORDER BY size(inputAsm.id) DESC, transition"
+  ],
+  "rows": 18,
+  "answer": "The Knowledge Graph does **not provide a complete disassembly sequence**. It shows these steps and branches:\n\n1. **Transition T338 \u2014 Unscrew 6x M20x2.5 Hex Bolt**\n   - **Input:** `Asm_ABCDEFGHIJKLMNOPQRSTUVWXY`\n   - **Results:** M20x2.5 Hex Bolt \u00d76, Volute Casing Gasket, and the assemblies `BCDFGHIKMNTW` and `ALOPRV`\n   - **Skill:** Unscrewing\n   - **Agent:** Human Worker (Human)\n   - **Tool:** Combination Wrench (30mm)\n\n2. **Branch `ALOPRV` \u2014 Transition T10: Unscrew 4x M12 Flange Bolt**\n   - **Results:** M12 Flange Bolt \u00d74, Volute Casing Cover, and Suction Nozzle\n   - **Skill:** Unscrewing\n   - **Agent:** Human Worker (Human)\n   - **Tool:** Combination Wrench (18mm)\n\n3. **Branch `BCDFGHIKMNTW` \u2014 Transition T296: Pull Off Coupling**\n   - **Results:** Coupling and assembly `BCDFGIKMNTW`\n   - **Skill:** Pulling Off\n   - **Agent:** Human Worker (Human)\n   - **Tool:** Pull-Off Tool\n\nThe data lists Transition T232 as taking `BCDFGHIKMNTW` as input, but T296 produces `BCDFGIKMNTW`. Because those assembly IDs differ, the listed steps do not establish a continuation from T296 to T232. Therefore, the remaining disassembly and a complete sequence cannot be confirmed from this data.",
+  "error": null,
+  "duration_s": 14.1,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P17",
+  "category": "Disassembly sequences",
+  "question": "Which disassembly steps release several parts simultaneously?",
+  "note": "43 transitions have three or more results",
+  "cyphers": [
+   "MATCH (trans:Transition {product_id: 'Prod_CentrifugalPump_V15'})-[:TRANSFORMS]->(inAsm:Assembly {product_id: 'Prod_CentrifugalPump_V15'})\nMATCH (trans)-[:RESULTS_IN]->(out)\nWHERE (out:Assembly OR out:Component) AND out.product_id = 'Prod_CentrifugalPump_V15'\nWITH trans, inAsm, collect(out) AS outputs, count(out) AS outCount\nWHERE outCount >= 3\nOPTIONAL MATCH (trans)-[:DISASSEMBLED_BY]->(task:DisassemblyTask {product_id: 'Prod_CentrifugalPump_V15'})\nRETURN inAsm.id AS fromAssembly,\n       trans.name AS transition,\n       task.name AS disassemblyStep,\n       outCount AS outputCount,\n       [o IN outputs | CASE WHEN o:Assembly THEN o.id ELSE 'Comp_' + o.partId END] AS outputs\nORDER BY outputCount DESC, fromAssembly"
+  ],
+  "rows": 43,
+  "answer": "The results show two disassembly steps that release several parts simultaneously:\n\n- **Unscrew 6x M20x2.5 Hex Bolt** \u2014 produces **9 outputs**: a combination of components and subassemblies. The listed outputs include components **A, E, J, Q, S, U, X, Y**, and subassemblies such as **ALOPRV**, **BCDFGHIKMNTW**, and related variants, depending on the starting assembly.\n- **Unscrew 4x M12 Flange Bolt** \u2014 produces **6 outputs**: typically the remaining assembly plus components **P, V, R, L, O**. In the **ALOPRV** case, it releases components **A, P, V, R, L, O**.",
+  "error": null,
+  "duration_s": 7.1,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P18",
+  "category": "Counting",
+  "question": "How many assembly states does this product have?",
+  "note": "",
+  "cyphers": [
+   "MATCH (asm:Assembly {product_id: 'Prod_CentrifugalPump_V15'})\nRETURN count(DISTINCT asm) AS assemblyStateCount"
+  ],
+  "rows": 1,
+  "answer": "The product has **102 distinct assembly states**.",
+  "error": null,
+  "duration_s": 4.1,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P19",
+  "category": "Counting",
+  "question": "How many transitions does the product have?",
+  "note": "",
+  "cyphers": [
+   "MATCH (trans:Transition {product_id: 'Prod_CentrifugalPump_V15'})\nRETURN count(DISTINCT trans) AS transitionCount"
+  ],
+  "rows": 1,
+  "answer": "The product has **340 transitions**.",
+  "error": null,
+  "duration_s": 4.1,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P20",
+  "category": "Counting",
+  "question": "How many disassembly tasks does this product have?",
+  "note": "",
+  "cyphers": [
+   "MATCH (task:DisassemblyTask {product_id: 'Prod_CentrifugalPump_V15'})\nRETURN count(task) AS disassemblyTaskCount"
+  ],
+  "rows": 1,
+  "answer": "This product has **20 disassembly tasks**.",
+  "error": null,
+  "duration_s": 3.7,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P21",
+  "category": "Tasks",
+  "question": "List all disassembly tasks of this product.",
+  "note": "",
+  "cyphers": [
+   "MATCH (task:DisassemblyTask {product_id: 'Prod_CentrifugalPump_V15'})\nOPTIONAL MATCH (task)-[:ACTS_ON]->(conn:Connection {product_id: 'Prod_CentrifugalPump_V15'})\nOPTIONAL MATCH (task)-[:PERFORMED_BY]->(agent:Agent)\nOPTIONAL MATCH (task)-[:USES_TOOL]->(tool:Tool)\nOPTIONAL MATCH (task)-[:REQUIRES]->(skill:Skill)\nRETURN task.id AS taskId,\n       task.name AS task,\n       collect(DISTINCT conn.name) AS connections,\n       collect(DISTINCT agent.name) AS agents,\n       collect(DISTINCT tool.name) AS tools,\n       collect(DISTINCT skill.name) AS skills\nORDER BY taskId"
+  ],
+  "rows": 20,
+  "answer": "The Knowledge Graph lists these disassembly tasks for the product. Each task is performed by a **Human Worker**:\n\n| Task | Connection | Skill | Tool |\n|---|---|---|---|\n| Pick Stuffing Box Gland Half_1 | Stuffing Box Gland Half_1 \u2194 Shaft | Picking | No Tool (Manual) |\n| Pick Stuffing Box Gland Half_1 | Stuffing Box Gland Half_1 \u2194 Stuffing Box Gland Half_2 | Picking | No Tool (Manual) |\n| Pick Volute Casing | Stuffing Box Gland Half_1 \u2194 Volute Casing | Picking | No Tool (Manual) |\n| Pull Off Bearing End Cap 1 | Bearing Housing \u2194 Bearing End Cap 1 | Pulling Off | Pull-Off Tool |\n| Pull Off Bearing Housing | Bearing Housing \u2194 Bearing End Cap 2 | Pulling Off | Pull-Off Tool |\n| Pull Off Bearing Housing | Bearing Housing \u2194 Bearing 59x70 | Pulling Off | Pull-Off Tool |\n| Pick Bearing Housing | Bearing Housing \u2194 Volute Casing | Picking | No Tool (Manual) |\n| Pull Off Bearing Housing | Bearing Housing \u2194 Bearing 40x50 | Pulling Off | Pull-Off Tool |\n| Pick Bearing End Cap 1 | Bearing End Cap 1 \u2194 Shaft | Picking | No Tool (Manual) |\n| Pick Bearing End Cap 2 | Shaft \u2194 Bearing End Cap 2 | Picking | No Tool (Manual) |\n| Pull Off Coupling | Shaft \u2194 Coupling | Pulling Off | Pull-Off Tool |\n| Pick Impeller | Shaft \u2194 Impeller | Picking | No Tool (Manual) |\n| Pull Off Bearing 59x70 | Shaft \u2194 Bearing 59x70 | Pulling Off | Pull-Off Tool |\n| Pick Stuffing Box Gland Half_2 | Shaft \u2194 Stuffing Box Gland Half_2 | Picking | No Tool (Manual) |\n| Unscrew M20 Cap Nut | Shaft \u2194 M20 Cap Nut | Unscrewing | Combination Wrench (30mm) |\n| Pull Off Bearing 40x50 | Shaft \u2194 Bearing 40x50 | Pulling Off | Pull-Off Tool |\n| Unscrew 4x M12 Flange Bolt | Volute Casing Cover \u2194 Suction Nozzle | Unscrewing | Combination Wrench (18mm) |\n| Unscrew 6x M20x2.5 Hex Bolt | Volute Casing \u2194 Volute Casing Gasket; Volute Casing Cover \u2194 Volute Casing; Volute Casing Cover \u2194 Volute Casing Gasket | Unscrewing | Combination Wrench (30mm) |\n| Pick M20 Cap Nut | Impeller \u2194 M20 Cap Nut | Picking | No Tool (Manual) |\n| Pick Volute Casing | Stuffing Box Gland Half_2 \u2194 Volute Casing | Picking | No Tool (Manual) |",
+  "error": null,
+  "duration_s": 8.1,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P22",
+  "category": "Tasks",
+  "question": "Which task frees the Impeller from the Shaft?",
+  "note": "the shaft-impeller seat is its own Loose Fit connection (Conn_FI); its task is 'Pick Impeller', possible once the cap nut is off",
+  "cyphers": [
+   "MATCH (conn:Connection {product_id: 'Prod_CentrifugalPump_V15'})-[:CONNECTS]->(impeller:Component {product_id: 'Prod_CentrifugalPump_V15'})\nMATCH (conn)-[:CONNECTS]->(shaft:Component {product_id: 'Prod_CentrifugalPump_V15'})\nWHERE toLower(impeller.name) CONTAINS 'impeller'\n  AND toLower(shaft.name) CONTAINS 'shaft'\nMATCH (task:DisassemblyTask {product_id: 'Prod_CentrifugalPump_V15'})-[:ACTS_ON]->(conn)\nOPTIONAL MATCH (task)-[:PERFORMED_BY]->(agent:Agent)\nOPTIONAL MATCH (task)-[:USES_TOOL]->(tool:Tool)\nRETURN task.name AS task,\n       conn.id AS connectionId,\n       agent.name AS agent,\n       tool.name AS tool"
+  ],
+  "rows": 1,
+  "answer": "The **Pick Impeller** task frees the Impeller from the Shaft. It acts on connection **Conn_FI**, is performed by the **Human** agent **Human Worker**, and uses **No Tool (Manual)**.",
+  "error": null,
+  "duration_s": 4.7,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P23",
+  "category": "Tasks",
+  "question": "Which connections does the task 'Unscrew 6x M20x2.5 Hex Bolt' act on?",
+  "note": "one task acts on the 18 connections of the six-bolt joint (ACTS_ON)",
+  "cyphers": [
+   "MATCH (task:DisassemblyTask {product_id: 'Prod_CentrifugalPump_V15'})-[:ACTS_ON]->(conn:Connection {product_id: 'Prod_CentrifugalPump_V15'})\nWHERE toLower(task.name) CONTAINS toLower('Unscrew 6x M20x2.5 Hex Bolt')\nOPTIONAL MATCH (conn)-[:CONNECTS]->(component:Component {product_id: 'Prod_CentrifugalPump_V15'})\nRETURN task.name AS task,\n       conn.id AS connectionId,\n       conn.name AS connection,\n       collect(DISTINCT component.name) AS connectedParts\nORDER BY connectionId"
+  ],
+  "rows": 18,
+  "answer": "The task **\u201cUnscrew 6x M20x2.5 Hex Bolt\u201d** acts on 18 connections across three part pairings:\n\n- **Volute Casing Cover \u2194 Volute Casing:** Conn_AT_E, Conn_AT_J, Conn_AT_Q, Conn_AT_S, Conn_AT_X, Conn_AT_Y\n- **Volute Casing Cover \u2194 Volute Casing Gasket:** Conn_AU_E, Conn_AU_J, Conn_AU_Q, Conn_AU_S, Conn_AU_X, Conn_AU_Y\n- **Volute Casing \u2194 Volute Casing Gasket:** Conn_TU_E, Conn_TU_J, Conn_TU_Q, Conn_TU_S, Conn_TU_X, Conn_TU_Y",
+  "error": null,
+  "duration_s": 5.3,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P24",
+  "category": "Resources",
+  "question": "Which agent performs the unscrew tasks?",
+  "note": "",
+  "cyphers": [
+   "MATCH (task:DisassemblyTask {product_id: 'Prod_CentrifugalPump_V15'})\nWHERE toLower(task.name) CONTAINS 'unscrew'\nOPTIONAL MATCH (task)-[:PERFORMED_BY]->(agent:Agent)\nRETURN task.name AS task, agent.name AS agent, agent.agentType AS agentType\nORDER BY task.name"
+  ],
+  "rows": 3,
+  "answer": "The **Human Worker (Human)** performs all three unscrew tasks:\n\n- Unscrew 4x M12 Flange Bolt\n- Unscrew 6x M20x2.5 Hex Bolt\n- Unscrew M20 Cap Nut",
+  "error": null,
+  "duration_s": 4.1,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P25",
+  "category": "Filtering",
+  "question": "Which assembly states contain the Impeller?",
+  "note": "answer must not over-interpret raw ids; 42 states",
+  "cyphers": [
+   "MATCH (asm:Assembly {product_id: 'Prod_CentrifugalPump_V15', isState: true})\nWHERE asm.id CONTAINS 'I'\nRETURN asm.id AS assemblyId, asm.name AS assemblyName,\n       asm.isRoot AS isRoot\nORDER BY size(asm.id) DESC, assemblyId"
+  ],
+  "rows": 42,
+  "answer": "The query returned the following assembly states whose IDs contain **I** (the data does not independently identify the letter **I** as \u201cImpeller\u201d):\n\n- Asm_ABCDEFGHIJKLMNOPQRSTUVWXY (root)\n- Asm_ABCDEFGHIJKLMOPQRSTUVWXY\n- Asm_ABCDEFGIJKLMNOPQRSTUVWXY\n- Asm_ABCDEFGIJKLMOPQRSTUVWXY\n- Asm_ABCEFGIJKLMNOPQRSTUVWXY\n- Asm_ABCEFGIJKLMNOPQRSTUVXY\n- Asm_ABCEFGIJKLMOPQRSTUVWXY\n- Asm_ABEFGIJKLMNOPQRSTUVWXY\n- Asm_ABEFGIJKLMNOPQRSTUVXY\n- Asm_ABEFGIJKLMOPQRSTUVWXY\n- Asm_ABCDEFGHIJKMNQSTUWXY\n- Asm_ABEFGIJLMNOPQRSTUVXY\n- Asm_ABCDEFGHIJKMQSTUWXY\n- Asm_ABCDEFGIJKMNQSTUWXY\n- Asm_ABEFGIJLMOPQRSTUVXY\n- Asm_ABCDEFGIJKMQSTUWXY\n- Asm_ABCEFGIJKMNQSTUWXY\n- Asm_ABCEFGIJKMNQSTUXY\n- Asm_ABCEFGIJKMQSTUWXY\n- Asm_ABEFGIJKMNQSTUWXY\n- Asm_ABCEFGIJKMQSTUXY\n- Asm_ABEFGIJKMNQSTUXY\n- Asm_ABEFGIJKMQSTUWXY\n- Asm_ABEFGIJKMQSTUXY\n- Asm_ABEFGIJMNQSTUXY\n- Asm_ABEFGIJMQSTUXY\n- Asm_BCDFGHIKMNTW\n- Asm_BCDFGHIKMTW\n- Asm_BCDFGIKMNTW\n- Asm_BCDFGIKMTW\n- Asm_BCFGIKMNTW\n- Asm_BCFGIKMNT\n- Asm_BCFGIKMTW\n- Asm_BFGIKMNTW\n- Asm_BCFGIKMT\n- Asm_BFGIKMNT\n- Asm_BFGIKMTW\n- Asm_BFGIKMT\n- Asm_BFGIMNT\n- Asm_BFGIMT",
+  "error": null,
+  "duration_s": 9.3,
+  "pass": true,
+  "failures": []
+ },
+ {
+  "id": "P26",
+  "category": "Filtering",
+  "question": "How many assembly states contain both the Shaft and the Bearing Housing?",
+  "note": "51 states contain both",
+  "cyphers": [
+   "MATCH (asm:Assembly {product_id: 'Prod_CentrifugalPump_V15', isState: true})\nWHERE asm.id CONTAINS 'F' AND asm.id CONTAINS 'C'\nRETURN count(asm) AS assemblyStateCount"
+  ],
+  "rows": 1,
+  "answer": "There are **51 assembly states** containing both the Shaft and the Bearing Housing.",
+  "error": null,
+  "duration_s": 4.0,
+  "pass": true,
+  "failures": []
+ }
+]

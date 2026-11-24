@@ -1,0 +1,521 @@
+{
+ "_comment": [
+  "Question catalogue of the centrifugal pump: the 27 questions of Table A.2 of the paper, with the question text as submitted in the recorded runs.",
+  "Case ids and paper numbers: P01 to P15 are questions 1 to 15, P15b is question 16, P16 to P26 are questions 17 to 27.",
+  "Run with: python scripts/run_pump_eval.py (server started with OPENAI_MODEL=gpt-6-luna for the runs reported in the paper). The script records the generated Cypher, the row count and the answer and evaluates the assertions below.",
+  "The verdict of each question is the result of the automatic check defined in this catalogue; for the question on a complete disassembly sequence this check tests the generated query, not the wording of the answer.",
+  "The catalogue expects the product of sample_data/Centrifugal Pump/centrifugal_pump_product.json under the id given in \"product\": 25 components (10 fasteners; the M20 cap nut is a part), 40 connections (7 press fits), 102 assembly states, 340 transitions, 20 tasks, 4 first steps from the complete pump."
+ ],
+ "product": "Prod_CentrifugalPump",
+ "cases": [
+  {
+   "id": "P01",
+   "category": "Product structure",
+   "severity": "core",
+   "question": "What components are in this product?",
+   "expect": {
+    "answer_all": [
+     [
+      "Impeller"
+     ],
+     [
+      "Shaft"
+     ],
+     [
+      "Volute Casing"
+     ],
+     [
+      "Bearing Housing"
+     ],
+     [
+      "Coupling"
+     ]
+    ],
+    "rows": {
+     "min": 20
+    },
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P02",
+   "category": "Product structure",
+   "severity": "core",
+   "question": "How many components does the product have?",
+   "expect": {
+    "answer_all": [
+     [
+      "25"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P03",
+   "category": "Product structure",
+   "severity": "core",
+   "question": "Which parts are fasteners?",
+   "expect": {
+    "answer_all": [
+     [
+      "M20x2.5",
+      "M20 x 2.5",
+      "Hex Bolt"
+     ],
+     [
+      "M12"
+     ]
+    ],
+    "rows": {
+     "min": 10
+    },
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P04",
+   "category": "Product structure",
+   "severity": "core",
+   "question": "What is the root assembly of this product?",
+   "expect": {
+    "answer_all": [
+     [
+      "Asm_ABCDEFGHIJKLMNOPQRSTUVWXY",
+      "full assembly",
+      "all 25",
+      "root"
+     ]
+    ],
+    "cypher_any": [
+     "isRoot"
+    ],
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P05",
+   "category": "Product structure",
+   "severity": "core",
+   "question": "What is the part id of the Impeller?",
+   "expect": {
+    "answer_all": [
+     [
+      "I"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P06",
+   "category": "Connections",
+   "severity": "core",
+   "question": "What connection types are used in this product?",
+   "expect": {
+    "answer_all": [
+     [
+      "Screw"
+     ],
+     [
+      "Press"
+     ],
+     [
+      "Loose"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P07",
+   "category": "Connections",
+   "severity": "core",
+   "question": "How many connections does this product have?",
+   "expect": {
+    "answer_all": [
+     [
+      "40"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P08",
+   "category": "Connections",
+   "severity": "core",
+   "question": "Which connections are press-fit?",
+   "expect": {
+    "rows": {
+     "min": 7
+    },
+    "answer_all": [
+     [
+      "Bearing",
+      "Shaft",
+      "Gland"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P09",
+   "category": "Connections",
+   "severity": "core",
+   "question": "Which fastener mediates the connection between the Volute Casing, the Volute Casing Gasket and the Volute Casing Cover?",
+   "expect": {
+    "answer_all": [
+     [
+      "M20x2.5",
+      "M20 x 2.5",
+      "Hex Bolt"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": "the three-part joint: cover, casing and gasket clamped by one bolt group"
+  },
+  {
+   "id": "P10",
+   "category": "Connections",
+   "severity": "core",
+   "question": "Which parts does the M20 Cap Nut connect?",
+   "expect": {
+    "answer_all": [
+     [
+      "Impeller"
+     ],
+     [
+      "Shaft"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": "the cap nut is a part with two connections: to the Shaft (Screw Joint) and to the Impeller (Loose Fit)"
+  },
+  {
+   "id": "P11",
+   "category": "Fasteners and tools",
+   "severity": "core",
+   "question": "Which fastener holds the Suction Nozzle and the Volute Casing Cover together?",
+   "expect": {
+    "answer_all": [
+     [
+      "M12"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P12",
+   "category": "Fasteners and tools",
+   "severity": "core",
+   "question": "Which tools are used for the unscrewing tasks?",
+   "expect": {
+    "answer_all": [
+     [
+      "18mm",
+      "18 mm"
+     ],
+     [
+      "30mm",
+      "30 mm"
+     ]
+    ],
+    "rows": {
+     "min": 1
+    },
+    "mutation": false
+   },
+   "note": "GT: MATCH (t:DisassemblyTask {product_id:'Prod_CentrifugalPump'})-[:REQUIRES]->(:Skill {id:'Skill_Unscrewing'}) MATCH (t)-[:USES_TOOL]->(tool) RETURN tool.name, count(t) -> Combination Wrench (18mm) for the M12 flange bolts (1 task), Combination Wrench (30mm) for the M20 hex bolts and the M20 cap nut (2 tasks)."
+  },
+  {
+   "id": "P13",
+   "category": "Disassembly sequences",
+   "severity": "core",
+   "question": "What is the first step to disassemble this product?",
+   "expect": {
+    "answer_all": [
+     [
+      "Cap Nut",
+      "M12 Flange Bolt",
+      "M20x2.5 Hex Bolt",
+      "Coupling"
+     ]
+    ],
+    "answer_none": [
+     "From assembly: Asm_BF\n",
+     "from a two-part"
+    ],
+    "cypher_any": [
+     "isRoot"
+    ],
+    "mutation": false
+   },
+   "note": "must anchor on the root assembly, not ORDER BY id; naming one of the four valid first steps (cap nut, M12 flange bolts, M20 hex bolts, coupling) is a correct answer"
+  },
+  {
+   "id": "P14",
+   "category": "Disassembly sequences",
+   "severity": "core",
+   "question": "How many alternative first disassembly steps are there from the full assembly?",
+   "expect": {
+    "answer_all": [
+     [
+      "4"
+     ]
+    ],
+    "cypher_any": [
+     "isRoot"
+    ],
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P15",
+   "category": "Disassembly sequences",
+   "severity": "core",
+   "question": "How do I remove the Impeller?",
+   "expect": {
+    "answer_all": [
+     [
+      "Cap Nut",
+      "cap nut"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P15b",
+   "category": "Disassembly sequences",
+   "severity": "core",
+   "question": "How do I remove the Shaft?",
+   "expect": {
+    "answer_all": [
+     [
+      "Shaft"
+     ],
+     [
+      "Step",
+      "step"
+     ]
+    ],
+    "rows": {
+     "min": 1
+    },
+    "answer_none": [
+     "cannot determine"
+    ],
+    "mutation": false
+   },
+   "note": "the Shaft cannot be removed in the first step, so the answer has to give the chain of preceding steps from the complete pump"
+  },
+  {
+   "id": "P16",
+   "category": "Disassembly sequences",
+   "severity": "core",
+   "question": "Generate a complete disassembly sequence for this product.",
+   "expect": {
+    "cypher_any": [
+     "isRoot"
+    ],
+    "mutation": false
+   },
+   "note": "valid path from the root to single parts; no optimality claim"
+  },
+  {
+   "id": "P17",
+   "category": "Disassembly sequences",
+   "severity": "core",
+   "question": "Which disassembly steps release several parts simultaneously?",
+   "expect": {
+    "rows": {
+     "min": 3
+    },
+    "mutation": false
+   },
+   "note": "43 transitions have three or more results"
+  },
+  {
+   "id": "P18",
+   "category": "Counting",
+   "severity": "core",
+   "question": "How many assembly states does this product have?",
+   "expect": {
+    "answer_all": [
+     [
+      "102"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P19",
+   "category": "Counting",
+   "severity": "core",
+   "question": "How many transitions does the product have?",
+   "expect": {
+    "answer_all": [
+     [
+      "340"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P20",
+   "category": "Counting",
+   "severity": "core",
+   "question": "How many disassembly tasks does this product have?",
+   "expect": {
+    "answer_all": [
+     [
+      "20"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P21",
+   "category": "Tasks",
+   "severity": "core",
+   "question": "List all disassembly tasks of this product.",
+   "expect": {
+    "answer_all": [
+     [
+      "Unscrew 6x M20",
+      "6x M20"
+     ],
+     [
+      "Unscrew 4x M12",
+      "4x M12"
+     ],
+     [
+      "Cap Nut"
+     ],
+     [
+      "Pull Off"
+     ]
+    ],
+    "rows": {
+     "min": 20
+    },
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P22",
+   "category": "Tasks",
+   "severity": "core",
+   "question": "Which task frees the Impeller from the Shaft?",
+   "expect": {
+    "answer_all": [
+     [
+      "Pick Impeller"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": "the shaft-impeller seat is its own Loose Fit connection (Conn_FI); its task is 'Pick Impeller', possible once the cap nut is off"
+  },
+  {
+   "id": "P23",
+   "category": "Tasks",
+   "severity": "core",
+   "question": "Which connections does the task 'Unscrew 6x M20x2.5 Hex Bolt' act on?",
+   "expect": {
+    "rows": {
+     "min": 1
+    },
+    "answer_all": [
+     [
+      "Volute Casing Cover",
+      "Cover"
+     ],
+     [
+      "Volute Casing"
+     ],
+     [
+      "Gasket"
+     ]
+    ],
+    "cypher_any": [
+     "ACTS_ON"
+    ],
+    "mutation": false
+   },
+   "note": "one task acts on the 18 connections of the six-bolt joint (ACTS_ON)"
+  },
+  {
+   "id": "P24",
+   "category": "Resources",
+   "severity": "core",
+   "question": "Which agent performs the unscrew tasks?",
+   "expect": {
+    "answer_all": [
+     [
+      "Human",
+      "Worker"
+     ]
+    ],
+    "mutation": false
+   },
+   "note": ""
+  },
+  {
+   "id": "P25",
+   "category": "Filtering",
+   "severity": "core",
+   "question": "Which assembly states contain the Impeller?",
+   "expect": {
+    "rows": {
+     "min": 42
+    },
+    "answer_none": [
+     "cannot determine",
+     "no assembly states"
+    ],
+    "mutation": false
+   },
+   "note": "answer must not over-interpret raw ids; 42 states"
+  },
+  {
+   "id": "P26",
+   "category": "Filtering",
+   "severity": "core",
+   "question": "How many assembly states contain both the Shaft and the Bearing Housing?",
+   "expect": {
+    "rows": {
+     "min": 1
+    },
+    "answer_none": [
+     "cannot determine"
+    ],
+    "mutation": false
+   },
+   "note": "51 states contain both"
+  }
+ ]
+}

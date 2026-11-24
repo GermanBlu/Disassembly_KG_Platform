@@ -1,0 +1,27 @@
+# Read-only DEMO image — Flask + GraphRAG + the Neo4j driver only.
+#
+# The STEP/CAD pipeline (pythonocc-core) is NOT installed: uploads are disabled
+# in DEMO_MODE, so the demo never touches OpenCASCADE. That makes this a plain
+# pip install that runs headless anywhere — no Cocoa/OpenGL, no conda.
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# requirements.txt lists pythonocc-core only as a comment (conda-only); pip
+# installs flask / neo4j / openai / numpy / networkx — everything the read path
+# and the chat engine need. gunicorn serves it.
+COPY requirements.txt .
+RUN pip install --no-cache-dir gunicorn -r requirements.txt
+
+COPY . .
+
+ENV DEMO_MODE=1 \
+    PORT=5050 \
+    PYTHONUNBUFFERED=1
+
+EXPOSE 5050
+
+# gthread worker streams the chat's Server-Sent Events; --timeout 0 keeps the
+# long-lived SSE connection open. One worker + threads is ample for a demo.
+CMD ["gunicorn", "--worker-class", "gthread", "--workers", "1", "--threads", "8", \
+     "--timeout", "0", "--bind", "0.0.0.0:5050", "app:app"]

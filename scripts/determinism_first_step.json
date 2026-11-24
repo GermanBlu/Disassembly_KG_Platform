@@ -1,0 +1,85 @@
+{
+ "question": "What is the first step to disassemble this product?",
+ "n": 10,
+ "first_named_transition_distribution": {
+  "null": 9,
+  "T337": 1
+ },
+ "distinct_transition_sets": 1,
+ "runs_without_transition_ids": 9,
+ "identical_across_runs": false,
+ "runs": [
+  {
+   "run": 1,
+   "transition_ids": [],
+   "first": null,
+   "error": null,
+   "answer_head": "The graph shows several possible first steps from the complete assembly; it does not identify one as the unique first step:\n\n- **Unscrew 4\u00d7 M12 Flange Bolt** \u2014 performed by a **Human** using a **Combination Wrench (18mm)**.\n- **Unscrew 6\u00d7 M20x2.5 Hex Bolt** \u2014 performed by a **Human** using a **Combination Wrench (30mm)**.\n- **Pick M20 Cap Nut** \u2014 performed by a **Human**, with **No Tool (Manual)**.\n- **Unscrew M20 Cap Nut** \u2014 performed by a **Human** using a **Combination Wrench (30mm)**.\n- **Pull Off Coupling** \u2014 performed by a **Human** using a **Pull-Off Tool**."
+  },
+  {
+   "run": 2,
+   "transition_ids": [],
+   "first": null,
+   "error": null,
+   "answer_head": "The first step listed is to **unscrew the 4 M12 Flange Bolts**. It is performed by a **Human Worker** using a **Combination Wrench (18mm)**. The results include the four bolts, the **Suction Nozzle**, and assembly **ABCDEFGHIJKMNQSTUWXY**."
+  },
+  {
+   "run": 3,
+   "transition_ids": [],
+   "first": null,
+   "error": null,
+   "answer_head": "The graph shows multiple possible first steps from the complete assembly; it does not identify one as the sole first step:\n\n- **Unscrew 4\u00d7 M12 Flange Bolt** \u2014 performed by a **Human** using a **Combination Wrench (18mm)**.\n- **Unscrew 6\u00d7 M20x2.5 Hex Bolt** \u2014 performed by a **Human** using a **Combination Wrench (30mm)**.\n- **Pick M20 Cap Nut** \u2014 performed by a **Human** using **No Tool (Manual)**.\n- **Unscrew M20 Cap Nut** \u2014 performed by a **Human** using a **Combination Wrench (30mm)**.\n- **Pull Off Coupling** \u2014 performed by a **Human** using a **Pull-Off Tool**."
+  },
+  {
+   "run": 4,
+   "transition_ids": [],
+   "first": null,
+   "error": null,
+   "answer_head": "The raw data lists multiple possible first steps from the complete assembly; it does not identify one as the required first step:\n\n- **Unscrew 4x M12 Flange Bolt** \u2014 Human Worker, using a **Combination Wrench (18mm)**.\n- **Unscrew 6x M20x2.5 Hex Bolt** \u2014 Human Worker, using a **Combination Wrench (30mm)**.\n- **Pick M20 Cap Nut** \u2014 Human Worker, using **No Tool (Manual)**.\n- **Unscrew M20 Cap Nut** \u2014 Human Worker, using a **Combination Wrench (30mm)**.\n- **Pull Off Coupling** \u2014 Human Worker, using a **Pull-Off Tool**."
+  },
+  {
+   "run": 5,
+   "transition_ids": [],
+   "first": null,
+   "error": null,
+   "answer_head": "The first step listed is **unscrew the 4 M12 Flange Bolts**. It is performed by a **Human Worker** using a **Combination Wrench (18mm)**. The results include the four bolts, the **Suction Nozzle**, and assembly **ABCDEFGHIJKMNQSTUWXY**."
+  },
+  {
+   "run": 6,
+   "transition_ids": [],
+   "first": null,
+   "error": null,
+   "answer_head": "The first step shown is to **unscrew the four M12 flange bolts**. It is performed by a **Human** using a **Combination Wrench (18mm)**. The transition removes the four bolts and the **Suction Nozzle**, and produces assembly **ABCDEFGHIJKMNQSTUWXY**."
+  },
+  {
+   "run": 7,
+   "transition_ids": [
+    "T337"
+   ],
+   "first": "T337",
+   "error": null,
+   "answer_head": "The first step shown is **Unscrew 4x M12 Flange Bolt** (transition **T337**). It is performed by a **Human** agent using a **Combination Wrench (18mm)**. The results include four M12 Flange Bolts, the **Suction Nozzle**, and a remaining assembly."
+  },
+  {
+   "run": 8,
+   "transition_ids": [],
+   "first": null,
+   "error": null,
+   "answer_head": "The first listed disassembly step is to **unscrew the four M12 flange bolts**. It is performed by a **Human** using a **Combination Wrench (18 mm)**. The transition results include four M12 flange bolts, the **Suction Nozzle**, and the remaining assembly."
+  },
+  {
+   "run": 9,
+   "transition_ids": [],
+   "first": null,
+   "error": null,
+   "answer_head": "The raw data shows several possible first steps from the complete assembly:\n\n- **Unscrew 4\u00d7 M12 Flange Bolt** \u2014 Human Worker, using a **Combination Wrench (18 mm)**.\n- **Unscrew 6\u00d7 M20\u00d72.5 Hex Bolt** \u2014 Human Worker, using a **Combination Wrench (30 mm)**.\n- **Pick M20 Cap Nut** \u2014 Human Worker, manually (**No Tool**).\n- **Unscrew M20 Cap Nut** \u2014 Human Worker, using a **Combination Wrench (30 mm)**.\n- **Pull Off Coupling** \u2014 Human Worker, using a **Pull-Off Tool**.\n\nThe data does not identify one of these as the uniquely first step."
+  },
+  {
+   "run": 10,
+   "transition_ids": [],
+   "first": null,
+   "error": null,
+   "answer_head": "The first disassembly step listed is **\u201cUnscrew 4x M12 Flange Bolt\u201d**. It is performed by a **Human** using a **Combination Wrench (18mm)**. The results include four M12 flange bolts, the **Suction Nozzle**, and the remaining assembly."
+  }
+ ]
+}

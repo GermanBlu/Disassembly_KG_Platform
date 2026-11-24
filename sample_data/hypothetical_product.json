@@ -1,0 +1,1270 @@
+{
+  "product": {
+    "id": "Prod_HypotheticalProduct",
+    "name": "Hypothetical Product"
+  },
+  "components": [
+    {
+      "partId": "A",
+      "name": "Holder",
+      "type": "Part"
+    },
+    {
+      "partId": "B",
+      "name": "End plate",
+      "type": "Part"
+    },
+    {
+      "partId": "C",
+      "name": "Hex socket head cap screw M8x1.25 x 14_1",
+      "type": "Fastener"
+    },
+    {
+      "partId": "D",
+      "name": "Base plate",
+      "type": "Part"
+    },
+    {
+      "partId": "E",
+      "name": "Tube_1",
+      "type": "Part"
+    },
+    {
+      "partId": "F",
+      "name": "Hex socket head cap screw M8x1.25 x 14_2",
+      "type": "Fastener"
+    },
+    {
+      "partId": "G",
+      "name": "Tube_2",
+      "type": "Part"
+    },
+    {
+      "partId": "H",
+      "name": "Shaft",
+      "type": "Part"
+    }
+  ],
+  "connections": [
+    {
+      "id": "Conn_AD_C",
+      "part1": "A",
+      "part2": "D",
+      "connectionType_id": "CT_ScrewJoint",
+      "agent_id": "Agent_HumanWorker",
+      "tool_id": "Tool_AllenKey5mm",
+      "fastener_id": "C"
+    },
+    {
+      "id": "Conn_AD_F",
+      "part1": "A",
+      "part2": "D",
+      "connectionType_id": "CT_ScrewJoint",
+      "agent_id": "Agent_HumanWorker",
+      "tool_id": "Tool_AllenKey5mm",
+      "fastener_id": "F"
+    },
+    {
+      "id": "Conn_AH",
+      "part1": "A",
+      "part2": "H",
+      "connectionType_id": "CT_LooseFit",
+      "agent_id": "Agent_HumanWorker",
+      "tool_id": "Tool_None",
+      "fastener_id": null
+    },
+    {
+      "id": "Conn_BH",
+      "part1": "B",
+      "part2": "H",
+      "connectionType_id": "CT_PressFit",
+      "agent_id": "Agent_HumanWorker",
+      "tool_id": "Tool_PullOffTool",
+      "fastener_id": null
+    },
+    {
+      "id": "Conn_DE",
+      "part1": "D",
+      "part2": "E",
+      "connectionType_id": "CT_PressFit",
+      "agent_id": "Agent_HumanWorker",
+      "tool_id": "Tool_PullOffTool",
+      "fastener_id": null
+    },
+    {
+      "id": "Conn_DG",
+      "part1": "D",
+      "part2": "G",
+      "connectionType_id": "CT_PressFit",
+      "agent_id": "Agent_HumanWorker",
+      "tool_id": "Tool_PullOffTool",
+      "fastener_id": null
+    }
+  ],
+  "transitions": [
+    {
+      "id": "T001",
+      "from_parts": "ABCDEFGH",
+      "results_in": [
+        "ABCDFGH",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T002",
+      "from_parts": "ABCDEFGH",
+      "results_in": [
+        "ABCDEFH",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T003",
+      "from_parts": "ABCDEFGH",
+      "results_in": [
+        "ABDEFGH",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T004",
+      "from_parts": "ABCDEFGH",
+      "results_in": [
+        "ABCDEGH",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T005",
+      "from_parts": "ABCDEFGH",
+      "results_in": [
+        "ACDEFGH",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BH",
+      "removed_part": "B"
+    },
+    {
+      "id": "T006",
+      "from_parts": "ABCDFGH",
+      "results_in": [
+        "ABCDFH",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T007",
+      "from_parts": "ABCDFGH",
+      "results_in": [
+        "ABDFGH",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T008",
+      "from_parts": "ABCDFGH",
+      "results_in": [
+        "ABCDGH",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T009",
+      "from_parts": "ABCDFGH",
+      "results_in": [
+        "ACDFGH",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BH",
+      "removed_part": "B"
+    },
+    {
+      "id": "T010",
+      "from_parts": "ABCDEFH",
+      "results_in": [
+        "ABCDFH",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T011",
+      "from_parts": "ABCDEFH",
+      "results_in": [
+        "ABDEFH",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T012",
+      "from_parts": "ABCDEFH",
+      "results_in": [
+        "ABCDEH",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T013",
+      "from_parts": "ABCDEFH",
+      "results_in": [
+        "ACDEFH",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BH",
+      "removed_part": "B"
+    },
+    {
+      "id": "T014",
+      "from_parts": "ABDEFGH",
+      "results_in": [
+        "ABDFGH",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T015",
+      "from_parts": "ABDEFGH",
+      "results_in": [
+        "ABDEFH",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T016",
+      "from_parts": "ABDEFGH",
+      "results_in": [
+        "ABH",
+        "DEG",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T017",
+      "from_parts": "ABDEFGH",
+      "results_in": [
+        "ADEFGH",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BH",
+      "removed_part": "B"
+    },
+    {
+      "id": "T018",
+      "from_parts": "ABCDEGH",
+      "results_in": [
+        "ABCDGH",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T019",
+      "from_parts": "ABCDEGH",
+      "results_in": [
+        "ABCDEH",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T020",
+      "from_parts": "ABCDEGH",
+      "results_in": [
+        "ACDEGH",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BH",
+      "removed_part": "B"
+    },
+    {
+      "id": "T021",
+      "from_parts": "ACDEFGH",
+      "results_in": [
+        "ACDFGH",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T022",
+      "from_parts": "ACDEFGH",
+      "results_in": [
+        "ACDEFH",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T023",
+      "from_parts": "ACDEFGH",
+      "results_in": [
+        "ADEFGH",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T024",
+      "from_parts": "ACDEFGH",
+      "results_in": [
+        "ACDEGH",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T025",
+      "from_parts": "ACDEFGH",
+      "results_in": [
+        "ACDEFG",
+        "H"
+      ],
+      "broken_connection_id": "Conn_AH",
+      "removed_part": "H"
+    },
+    {
+      "id": "T026",
+      "from_parts": "ABCDFH",
+      "results_in": [
+        "ABDFH",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T027",
+      "from_parts": "ABCDFH",
+      "results_in": [
+        "ABCDH",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T028",
+      "from_parts": "ABCDFH",
+      "results_in": [
+        "ACDFH",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BH",
+      "removed_part": "B"
+    },
+    {
+      "id": "T029",
+      "from_parts": "ABDFGH",
+      "results_in": [
+        "ADFGH",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BH",
+      "removed_part": "B"
+    },
+    {
+      "id": "T030",
+      "from_parts": "ABDFGH",
+      "results_in": [
+        "ABH",
+        "DG",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T031",
+      "from_parts": "ABDFGH",
+      "results_in": [
+        "ABDFH",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T032",
+      "from_parts": "ABCDGH",
+      "results_in": [
+        "ACDGH",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BH",
+      "removed_part": "B"
+    },
+    {
+      "id": "T033",
+      "from_parts": "ABCDGH",
+      "results_in": [
+        "ABH",
+        "DG",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T034",
+      "from_parts": "ABCDGH",
+      "results_in": [
+        "ABCDH",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T035",
+      "from_parts": "ACDFGH",
+      "results_in": [
+        "ADFGH",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T036",
+      "from_parts": "ACDFGH",
+      "results_in": [
+        "ACDGH",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T037",
+      "from_parts": "ACDFGH",
+      "results_in": [
+        "ACDFH",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T038",
+      "from_parts": "ACDFGH",
+      "results_in": [
+        "ACDFG",
+        "H"
+      ],
+      "broken_connection_id": "Conn_AH",
+      "removed_part": "H"
+    },
+    {
+      "id": "T039",
+      "from_parts": "ABDEFH",
+      "results_in": [
+        "ADEFH",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BH",
+      "removed_part": "B"
+    },
+    {
+      "id": "T040",
+      "from_parts": "ABDEFH",
+      "results_in": [
+        "ABDFH",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T041",
+      "from_parts": "ABDEFH",
+      "results_in": [
+        "ABH",
+        "DE",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T042",
+      "from_parts": "ABCDEH",
+      "results_in": [
+        "ACDEH",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BH",
+      "removed_part": "B"
+    },
+    {
+      "id": "T043",
+      "from_parts": "ABCDEH",
+      "results_in": [
+        "ABH",
+        "DE",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T044",
+      "from_parts": "ABCDEH",
+      "results_in": [
+        "ABCDH",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T045",
+      "from_parts": "ACDEFH",
+      "results_in": [
+        "ADEFH",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T046",
+      "from_parts": "ACDEFH",
+      "results_in": [
+        "ACDFH",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T047",
+      "from_parts": "ACDEFH",
+      "results_in": [
+        "ACDEH",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T048",
+      "from_parts": "ACDEFH",
+      "results_in": [
+        "ACDEF",
+        "H"
+      ],
+      "broken_connection_id": "Conn_AH",
+      "removed_part": "H"
+    },
+    {
+      "id": "T049",
+      "from_parts": "ADEFGH",
+      "results_in": [
+        "ADFGH",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T050",
+      "from_parts": "ADEFGH",
+      "results_in": [
+        "AH",
+        "DEG",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T051",
+      "from_parts": "ADEFGH",
+      "results_in": [
+        "ADEFH",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T052",
+      "from_parts": "ADEFGH",
+      "results_in": [
+        "ADEFG",
+        "H"
+      ],
+      "broken_connection_id": "Conn_AH",
+      "removed_part": "H"
+    },
+    {
+      "id": "T053",
+      "from_parts": "ACDEGH",
+      "results_in": [
+        "AH",
+        "DEG",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T054",
+      "from_parts": "ACDEGH",
+      "results_in": [
+        "ACDGH",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T055",
+      "from_parts": "ACDEGH",
+      "results_in": [
+        "ACDEH",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T056",
+      "from_parts": "ACDEGH",
+      "results_in": [
+        "ACDEG",
+        "H"
+      ],
+      "broken_connection_id": "Conn_AH",
+      "removed_part": "H"
+    },
+    {
+      "id": "T057",
+      "from_parts": "ACDEFG",
+      "results_in": [
+        "ADEFG",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T058",
+      "from_parts": "ACDEFG",
+      "results_in": [
+        "ACDFG",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T059",
+      "from_parts": "ACDEFG",
+      "results_in": [
+        "ACDEG",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T060",
+      "from_parts": "ACDEFG",
+      "results_in": [
+        "ACDEF",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T061",
+      "from_parts": "ABDFH",
+      "results_in": [
+        "ADFH",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BH",
+      "removed_part": "B"
+    },
+    {
+      "id": "T062",
+      "from_parts": "ABDFH",
+      "results_in": [
+        "ABH",
+        "D",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T063",
+      "from_parts": "ABCDH",
+      "results_in": [
+        "ACDH",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BH",
+      "removed_part": "B"
+    },
+    {
+      "id": "T064",
+      "from_parts": "ABCDH",
+      "results_in": [
+        "ABH",
+        "D",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T065",
+      "from_parts": "ACDFH",
+      "results_in": [
+        "ADFH",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T066",
+      "from_parts": "ACDFH",
+      "results_in": [
+        "ACDH",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T067",
+      "from_parts": "ACDFH",
+      "results_in": [
+        "ACDF",
+        "H"
+      ],
+      "broken_connection_id": "Conn_AH",
+      "removed_part": "H"
+    },
+    {
+      "id": "T068",
+      "from_parts": "ADFGH",
+      "results_in": [
+        "AH",
+        "DG",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T069",
+      "from_parts": "ADFGH",
+      "results_in": [
+        "ADFH",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T070",
+      "from_parts": "ADFGH",
+      "results_in": [
+        "ADFG",
+        "H"
+      ],
+      "broken_connection_id": "Conn_AH",
+      "removed_part": "H"
+    },
+    {
+      "id": "T071",
+      "from_parts": "ACDGH",
+      "results_in": [
+        "AH",
+        "DG",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T072",
+      "from_parts": "ACDGH",
+      "results_in": [
+        "ACDH",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T073",
+      "from_parts": "ACDGH",
+      "results_in": [
+        "ACDG",
+        "H"
+      ],
+      "broken_connection_id": "Conn_AH",
+      "removed_part": "H"
+    },
+    {
+      "id": "T074",
+      "from_parts": "ADEFH",
+      "results_in": [
+        "ADFH",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T075",
+      "from_parts": "ADEFH",
+      "results_in": [
+        "AH",
+        "DE",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T076",
+      "from_parts": "ADEFH",
+      "results_in": [
+        "ADEF",
+        "H"
+      ],
+      "broken_connection_id": "Conn_AH",
+      "removed_part": "H"
+    },
+    {
+      "id": "T077",
+      "from_parts": "ACDEH",
+      "results_in": [
+        "AH",
+        "DE",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T078",
+      "from_parts": "ACDEH",
+      "results_in": [
+        "ACDH",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T079",
+      "from_parts": "ACDEH",
+      "results_in": [
+        "ACDE",
+        "H"
+      ],
+      "broken_connection_id": "Conn_AH",
+      "removed_part": "H"
+    },
+    {
+      "id": "T080",
+      "from_parts": "ACDEF",
+      "results_in": [
+        "ADEF",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T081",
+      "from_parts": "ACDEF",
+      "results_in": [
+        "ACDF",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T082",
+      "from_parts": "ACDEF",
+      "results_in": [
+        "ACDE",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T083",
+      "from_parts": "ADEFG",
+      "results_in": [
+        "ADFG",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T084",
+      "from_parts": "ADEFG",
+      "results_in": [
+        "A",
+        "DEG",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T085",
+      "from_parts": "ADEFG",
+      "results_in": [
+        "ADEF",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T086",
+      "from_parts": "ACDEG",
+      "results_in": [
+        "A",
+        "DEG",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T087",
+      "from_parts": "ACDEG",
+      "results_in": [
+        "ACDG",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T088",
+      "from_parts": "ACDEG",
+      "results_in": [
+        "ACDE",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T089",
+      "from_parts": "ADFH",
+      "results_in": [
+        "AH",
+        "D",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T090",
+      "from_parts": "ADFH",
+      "results_in": [
+        "ADF",
+        "H"
+      ],
+      "broken_connection_id": "Conn_AH",
+      "removed_part": "H"
+    },
+    {
+      "id": "T091",
+      "from_parts": "ACDH",
+      "results_in": [
+        "AH",
+        "D",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T092",
+      "from_parts": "ACDH",
+      "results_in": [
+        "ACD",
+        "H"
+      ],
+      "broken_connection_id": "Conn_AH",
+      "removed_part": "H"
+    },
+    {
+      "id": "T093",
+      "from_parts": "ACDF",
+      "results_in": [
+        "ADF",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T094",
+      "from_parts": "ACDF",
+      "results_in": [
+        "ACD",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T095",
+      "from_parts": "ADFG",
+      "results_in": [
+        "A",
+        "DG",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T096",
+      "from_parts": "ADFG",
+      "results_in": [
+        "ADF",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T097",
+      "from_parts": "ACDG",
+      "results_in": [
+        "A",
+        "DG",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T098",
+      "from_parts": "ACDG",
+      "results_in": [
+        "ACD",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T099",
+      "from_parts": "ADEF",
+      "results_in": [
+        "ADF",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T100",
+      "from_parts": "ADEF",
+      "results_in": [
+        "A",
+        "DE",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T101",
+      "from_parts": "ACDE",
+      "results_in": [
+        "A",
+        "DE",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T102",
+      "from_parts": "ACDE",
+      "results_in": [
+        "ACD",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T103",
+      "from_parts": "ABH",
+      "results_in": [
+        "AH",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BH",
+      "removed_part": "B"
+    },
+    {
+      "id": "T104",
+      "from_parts": "DEG",
+      "results_in": [
+        "DE",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T105",
+      "from_parts": "DEG",
+      "results_in": [
+        "DG",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T106",
+      "from_parts": "ADF",
+      "results_in": [
+        "A",
+        "D",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T107",
+      "from_parts": "ACD",
+      "results_in": [
+        "A",
+        "C",
+        "D"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T108",
+      "from_parts": "DG",
+      "results_in": [
+        "D",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T109",
+      "from_parts": "DE",
+      "results_in": [
+        "D",
+        "E"
+      ],
+      "broken_connection_id": "Conn_DE",
+      "removed_part": "E"
+    },
+    {
+      "id": "T110",
+      "from_parts": "AH",
+      "results_in": [
+        "A",
+        "H"
+      ],
+      "broken_connection_id": "Conn_AH",
+      "removed_part": "H"
+    },
+    {
+      "id": "T111",
+      "from_parts": "ABCDEGH",
+      "results_in": [
+        "ABH",
+        "DEG",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    },
+    {
+      "id": "T112",
+      "from_parts": "ACDFG",
+      "results_in": [
+        "ACDF",
+        "G"
+      ],
+      "broken_connection_id": "Conn_DG",
+      "removed_part": "G"
+    },
+    {
+      "id": "T113",
+      "from_parts": "ACDFG",
+      "results_in": [
+        "ACDG",
+        "F"
+      ],
+      "broken_connection_id": "Conn_AD_F",
+      "removed_part": "F"
+    },
+    {
+      "id": "T114",
+      "from_parts": "ACDFG",
+      "results_in": [
+        "ADFG",
+        "C"
+      ],
+      "broken_connection_id": "Conn_AD_C",
+      "removed_part": "C"
+    }
+  ]
+}

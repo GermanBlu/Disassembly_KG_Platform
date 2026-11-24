@@ -1,0 +1,209 @@
+{
+  "product": {
+    "id": "Prod_BallpointPen",
+    "name": "Ballpoint Pen"
+  },
+  "components": [
+    {
+      "partId": "A",
+      "name": "Body",
+      "type": "Part"
+    },
+    {
+      "partId": "B",
+      "name": "Head",
+      "type": "Part"
+    },
+    {
+      "partId": "C",
+      "name": "Cartridge",
+      "type": "Part"
+    },
+    {
+      "partId": "D",
+      "name": "Ink",
+      "type": "Part"
+    },
+    {
+      "partId": "E",
+      "name": "Button",
+      "type": "Part"
+    },
+    {
+      "partId": "F",
+      "name": "Cap",
+      "type": "Part"
+    }
+  ],
+  "connections": [
+    {
+      "id": "Conn_FA",
+      "part1": "F",
+      "part2": "A",
+      "connectionType_id": "CT_PressFit",
+      "agent_id": "Agent_HumanWorker",
+      "tool_id": "Tool_None"
+    },
+    {
+      "id": "Conn_EA",
+      "part1": "E",
+      "part2": "A",
+      "connectionType_id": "CT_SnapJoint",
+      "agent_id": "Agent_HumanWorker",
+      "tool_id": "Tool_FlatScrewdriver"
+    },
+    {
+      "id": "Conn_BA",
+      "part1": "B",
+      "part2": "A",
+      "connectionType_id": "CT_SnapJoint",
+      "agent_id": "Agent_HumanWorker",
+      "tool_id": "Tool_None"
+    },
+    {
+      "id": "Conn_CD",
+      "part1": "C",
+      "part2": "D",
+      "connectionType_id": "CT_Containment",
+      "agent_id": "Agent_HumanWorker",
+      "tool_id": "Tool_None"
+    },
+    {
+      "id": "Conn_CB",
+      "part1": "C",
+      "part2": "B",
+      "connectionType_id": "CT_PressFit",
+      "agent_id": "Agent_HumanWorker",
+      "tool_id": "Tool_Tweezers"
+    }
+  ],
+  "transitions": [
+    {
+      "id": "T01",
+      "from_parts": "ABCDEF",
+      "results_in": [
+        "ABCDE",
+        "F"
+      ],
+      "broken_connection_id": "Conn_FA",
+      "removed_part": "F"
+    },
+    {
+      "id": "T02",
+      "from_parts": "ABCDEF",
+      "results_in": [
+        "ABCDF",
+        "E"
+      ],
+      "broken_connection_id": "Conn_EA",
+      "removed_part": "E"
+    },
+    {
+      "id": "T03",
+      "from_parts": "ABCDE",
+      "results_in": [
+        "ABCD",
+        "E"
+      ],
+      "broken_connection_id": "Conn_EA",
+      "removed_part": "E"
+    },
+    {
+      "id": "T04",
+      "from_parts": "ABCDE",
+      "results_in": [
+        "BCD",
+        "AE"
+      ],
+      "broken_connection_id": "Conn_BA"
+    },
+    {
+      "id": "T05",
+      "from_parts": "ABCDF",
+      "results_in": [
+        "ABCD",
+        "F"
+      ],
+      "broken_connection_id": "Conn_FA",
+      "removed_part": "F"
+    },
+    {
+      "id": "T06",
+      "from_parts": "ABCDF",
+      "results_in": [
+        "ABF",
+        "CD"
+      ],
+      "broken_connection_id": "Conn_CB"
+    },
+    {
+      "id": "T07",
+      "from_parts": "ABCD",
+      "results_in": [
+        "BCD",
+        "A"
+      ],
+      "broken_connection_id": "Conn_BA",
+      "removed_part": "A"
+    },
+    {
+      "id": "T08",
+      "from_parts": "ABCD",
+      "results_in": [
+        "AB",
+        "CD"
+      ],
+      "broken_connection_id": "Conn_CB"
+    },
+    {
+      "id": "T09",
+      "from_parts": "ABF",
+      "results_in": [
+        "AB",
+        "F"
+      ],
+      "broken_connection_id": "Conn_FA",
+      "removed_part": "F"
+    },
+    {
+      "id": "T10",
+      "from_parts": "BCD",
+      "results_in": [
+        "CD",
+        "B"
+      ],
+      "broken_connection_id": "Conn_CB",
+      "removed_part": "B"
+    },
+    {
+      "id": "T11",
+      "from_parts": "AE",
+      "results_in": [
+        "A",
+        "E"
+      ],
+      "broken_connection_id": "Conn_EA",
+      "removed_part": "E"
+    },
+    {
+      "id": "T12",
+      "from_parts": "CD",
+      "results_in": [
+        "C",
+        "D"
+      ],
+      "broken_connection_id": "Conn_CD",
+      "removed_part": "D"
+    },
+    {
+      "id": "T13",
+      "from_parts": "AB",
+      "results_in": [
+        "A",
+        "B"
+      ],
+      "broken_connection_id": "Conn_BA",
+      "removed_part": "B"
+    }
+  ]
+}

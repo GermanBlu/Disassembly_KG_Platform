@@ -1,0 +1,58 @@
+# Self-contained read-only demo: Flask app + self-hosted Neo4j, pre-seeded
+# with the enriched hypothetical product. One command, one URL, no cloud.
+#
+#   export OPENAI_API_KEY=sk-...            # required for the chat
+#   export NEO4J_PASSWORD=choose-a-password # optional; default demo_change_me,
+#                                           # passed to all three containers
+#   docker compose -f docker-compose.demo.yml up --build
+#
+# Then open http://<server>:5050 . Everything is read-only (DEMO_MODE=1).
+services:
+  neo4j:
+    image: neo4j:5
+    environment:
+      NEO4J_AUTH: "neo4j/${NEO4J_PASSWORD:-demo_change_me}"
+      NEO4J_server_memory_heap_max__size: "1G"
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p \"${NEO4J_PASSWORD:-demo_change_me}\" 'RETURN 1' >/dev/null 2>&1 || exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 40
+      start_period: 20s
+    volumes:
+      - neo4j_data:/data
+
+  # one-shot: build + enrich the demo product, then exit
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile.demo
+    command: ["python", "seed_demo_product.py"]
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    environment:
+      NEO4J_URI: "bolt://neo4j:7687"
+      NEO4J_USER: "neo4j"
+      NEO4J_PASSWORD: "${NEO4J_PASSWORD:-demo_change_me}"
+    restart: "no"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.demo
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    environment:
+      DEMO_MODE: "1"
+      NEO4J_URI: "bolt://neo4j:7687"
+      NEO4J_USER: "neo4j"
+      NEO4J_PASSWORD: "${NEO4J_PASSWORD:-demo_change_me}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:?set OPENAI_API_KEY for the chat}"
+      OPENAI_MODEL: "${OPENAI_MODEL:-gpt-5.4-mini}"
+    ports:
+      - "${DEMO_PORT:-5050}:5050"
+
+volumes:
+  neo4j_data:

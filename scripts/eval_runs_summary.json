@@ -1,0 +1,82 @@
+{
+ "date": "2026-11-02",
+ "model": "gpt-6-luna",
+ "note": "Pass counts are by automatic check. Response time is the time per answer in seconds as recorded in duration_s; the 95th percentile is the nearest-rank value over both runs of a catalogue.",
+ "catalogues": {
+  "hypothetical_product": {
+   "catalogue": "rag_eval/cases_hp.json",
+   "runs": [
+    {
+     "run": 1,
+     "passed": 32,
+     "total": 33,
+     "failed": [
+      "H18"
+     ],
+     "records": [
+      "scripts/hp_eval_run1_results.json",
+      "scripts/hp_eval_run1_report.md",
+      "scripts/hp_eval_run1_report.csv"
+     ]
+    },
+    {
+     "run": 2,
+     "passed": 32,
+     "total": 33,
+     "failed": [
+      "H18"
+     ],
+     "records": [
+      "scripts/hp_eval_run2_results.json",
+      "scripts/hp_eval_run2_report.md",
+      "scripts/hp_eval_run2_report.csv"
+     ]
+    }
+   ],
+   "inspection": "H18: the automatic row check fails in both runs (the tools come back in one row); both answers name all three tools. By inspection 33 of 33 in both runs.",
+   "response_time_s": {
+    "n": 62,
+    "median": 4.2,
+    "p95": 9.2,
+    "excluded": "H32 and H33 (delete requests, refused before any model call)"
+   }
+  },
+  "centrifugal_pump": {
+   "catalogue": "rag_eval/cases_pump.json",
+   "runs": [
+    {
+     "run": 1,
+     "passed": 26,
+     "total": 27,
+     "failed": [
+      "P10"
+     ],
+     "records": [
+      "scripts/pump_eval_run1_results.json",
+      "scripts/pump_eval_run1_report.md",
+      "scripts/pump_eval_run1_report.csv"
+     ]
+    },
+    {
+     "run": 2,
+     "passed": 25,
+     "total": 27,
+     "failed": [
+      "P10",
+      "P15b"
+     ],
+     "records": [
+      "scripts/pump_eval_run2_results.json",
+      "scripts/pump_eval_run2_report.md",
+      "scripts/pump_eval_run2_report.csv"
+     ]
+    }
+   ],
+   "response_time_s": {
+    "n": 54,
+    "median": 4.5,
+    "p95": 14.2
+   }
+  }
+ }
+}

@@ -1,0 +1,16 @@
+flask>=3.0
+neo4j>=5.0
+# The chat engine calls the Responses API (client.responses.create); developed and
+# tested with openai 2.x.
+openai>=2.0
+python-dotenv>=1.0
+numpy>=1.20.0
+scipy>=1.10
+networkx>=3.0
+
+# The test suite needs pytest (not required to run the application):
+#   pip install pytest
+
+# pythonocc-core is required by the STEP/CAD pipeline (pipeline/).
+# It is NOT pip-installable — install via conda:
+#   conda install -c conda-forge pythonocc-core
